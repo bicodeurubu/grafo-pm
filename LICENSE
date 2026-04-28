@@ -1,0 +1,45 @@
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+
+Copyright (c) 2024-2026 Diogo Soares (github.com/bicodeurubu)
+
+This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+International License.
+
+You are free to:
+  Share — copy and redistribute the material in any medium or format
+  Adapt — remix, transform, and build upon the material
+
+Under the following terms:
+  Attribution   — You must give appropriate credit, provide a link to the license,
+                  and indicate if changes were made.
+  NonCommercial — You may not use the material for commercial purposes.
+  ShareAlike    — If you remix, transform, or build upon the material, you must
+                  distribute your contributions under the same license as the original.
+
+No additional restrictions — You may not apply legal terms or technological measures
+that legally restrict others from doing anything the license permits.
+
+Full license text: https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+---
+
+COMMERCIAL USE
+
+Use of this project, or derivative works, for commercial purposes — including but not
+limited to: internal use at for-profit companies, integration into paid products or
+services, or resale — requires a separate commercial license.
+
+To inquire about a commercial license, contact: diogosp@gmail.com
+
+For-profit companies may not use this project or any derivative work without a
+commercial license, regardless of the scale of their use.
+
+---
+
+ATTRIBUTION CHAIN
+
+This project builds on llm-wikid (https://github.com/shannhk/llm-wikid)
+by Shann Holmberg (https://github.com/shannhk), which was inspired by the
+LLM Wiki pattern described by Andrej Karpathy (https://github.com/karpathy).
+
+If you fork or adapt this work, you must preserve this attribution chain.

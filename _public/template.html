@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{PRODUCT_NAME}} — Product Brain · {{PM_NAME}}</title>
+  <meta name="description" content="{{PRODUCT_TAGLINE}}">
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #0d0d0d;
+      --bg-card:      #141414;
+      --bg-card-alt:  #1a1a1a;
+      --border:       #222222;
+      --border-light: #2a2a2a;
+      --text:         #e8e8e8;
+      --text-muted:   #666666;
+      --text-dim:     #999999;
+      --accent:       #7c6fff;
+      --accent-soft:  rgba(124, 111, 255, 0.12);
+      --green:        #3ecf8e;
+      --green-soft:   rgba(62, 207, 142, 0.10);
+      --yellow:       #f0b429;
+      --yellow-soft:  rgba(240, 180, 41, 0.10);
+      --red:          #ff6b6b;
+      --red-soft:     rgba(255, 107, 107, 0.10);
+      --font:         -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Helvetica, Arial, sans-serif;
+      --font-mono:    "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
+      --radius:       8px;
+      --radius-lg:    12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Layout ────────────────────────────────────────────────── */
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── Header ────────────────────────────────────────────────── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 56px 0 48px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      padding: 3px 10px;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .tagline {
+      font-size: 17px;
+      color: var(--text-dim);
+      margin-bottom: 28px;
+      max-width: 580px;
+      line-height: 1.5;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .meta-item .label { color: var(--text-dim); }
+
+    .meta-dot {
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: var(--border-light);
+    }
+
+    /* ─── Navigation ────────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      background: rgba(13, 13, 13, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    nav .container::-webkit-scrollbar { display: none; }
+
+    nav a {
+      white-space: nowrap;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 5px 12px;
+      border-radius: var(--radius);
+      transition: all 0.15s ease;
+    }
+
+    nav a:hover { color: var(--text); background: var(--bg-card); }
+
+    /* ─── Main Content ──────────────────────────────────────────── */
+    main { padding: 56px 0 80px; }
+
+    section { margin-bottom: 64px; }
+
+    .section-header {
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .section-header p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ─── Cards ─────────────────────────────────────────────────── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 12px;
+    }
+
+    .card:last-child { margin-bottom: 0; }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .card-body {
+      font-size: 14px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    /* ─── Chips / Tags ──────────────────────────────────────────── */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.02em;
+    }
+
+    .chip-green  { background: var(--green-soft);  color: var(--green);  }
+    .chip-yellow { background: var(--yellow-soft); color: var(--yellow); }
+    .chip-red    { background: var(--red-soft);    color: var(--red);    }
+    .chip-accent { background: var(--accent-soft); color: var(--accent); }
+    .chip-muted  { background: var(--bg-card-alt); color: var(--text-muted); border: 1px solid var(--border); }
+
+    /* ─── OST Tree ──────────────────────────────────────────────── */
+    .ost-outcome {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+
+    .ost-outcome-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .ost-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .ost-icon-outcome  { background: var(--accent-soft); }
+    .ost-icon-opp      { background: var(--green-soft);  }
+    .ost-icon-solution { background: var(--yellow-soft); }
+    .ost-icon-exp      { background: rgba(255,255,255,0.05); }
+
+    .ost-outcome-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 3px;
+    }
+
+    .ost-outcome-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .ost-children {
+      border-left: 2px solid var(--border-light);
+      margin-left: 15px;
+      padding-left: 20px;
+    }
+
+    .ost-node {
+      margin-bottom: 14px;
+    }
+
+    .ost-node:last-child { margin-bottom: 0; }
+
+    .ost-node-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .ost-node-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .ost-node-body {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-left: 42px;
+      line-height: 1.55;
+    }
+
+    .ost-sub {
+      margin-left: 42px;
+      margin-top: 10px;
+      border-left: 1px solid var(--border);
+      padding-left: 16px;
+    }
+
+    .ost-leaf {
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .ost-leaf-title {
+      color: var(--text-dim);
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+
+    .ost-leaf-desc {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    /* ─── Decision Cards ────────────────────────────────────────── */
+    .decision-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .decision-card summary {
+      list-style: none;
+      padding: 18px 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      user-select: none;
+    }
+
+    .decision-card summary::-webkit-details-marker { display: none; }
+
+    .decision-card summary:hover { background: var(--bg-card-alt); }
+
+    .decision-chevron {
+      width: 20px; height: 20px;
+      border-radius: 5px;
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: transform 0.2s ease;
+    }
+
+    .decision-card[open] .decision-chevron { transform: rotate(90deg); }
+
+    .decision-summary-text { flex: 1; }
+
+    .decision-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 3px;
+    }
+
+    .decision-tldr {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .decision-body {
+      padding: 0 24px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .decision-body h4 {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 16px 0 6px;
+    }
+
+    .decision-body p {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .decision-options {
+      list-style: none;
+      margin: 8px 0 0;
+    }
+
+    .decision-options li {
+      font-size: 13px;
+      color: var(--text-dim);
+      padding: 4px 0;
+      padding-left: 16px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .decision-options li::before {
+      content: "–";
+      position: absolute;
+      left: 0;
+      color: var(--border-light);
+    }
+
+    .decision-options li.chosen {
+      color: var(--text);
+    }
+
+    .decision-options li.chosen::before {
+      content: "✓";
+      color: var(--green);
+    }
+
+    /* ─── Experiments ───────────────────────────────────────────── */
+    .experiment-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 12px;
+    }
+
+    .experiment-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .experiment-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .experiment-hypothesis {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .experiment-result {
+      background: var(--bg-card-alt);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.55;
+    }
+
+    .experiment-result strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* ─── Hypotheses ────────────────────────────────────────────── */
+    .hypothesis-list { list-style: none; }
+
+    .hypothesis-item {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .hypothesis-item:last-child { border-bottom: none; }
+
+    .hypothesis-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 8px;
+      opacity: 0.6;
+    }
+
+    .hypothesis-text {
+      font-size: 14px;
+      color: var(--text-dim);
+      line-height: 1.55;
+    }
+
+    /* ─── About section ─────────────────────────────────────────── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 560px) {
+      .about-grid { grid-template-columns: 1fr; }
+    }
+
+    .about-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+    }
+
+    .about-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .about-value {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+    }
+
+    footer .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-left {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .footer-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.15s;
+    }
+
+    .footer-link:hover { color: var(--text); }
+
+    .footer-brand {
+      font-size: 12px;
+      color: var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer-brand a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .footer-brand a:hover { color: var(--accent); }
+
+    /* ─── Utility ───────────────────────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 14px;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-lg);
+    }
+
+    p + p { margin-top: 10px; }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+      header { padding: 40px 0 36px; }
+      main { padding: 40px 0 60px; }
+      section { margin-bottom: 48px; }
+    }
+
+    @media print {
+      nav { display: none; }
+      .decision-card[open] .decision-body { display: block; }
+      body { background: white; color: #111; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     HEADER
+     Substitua: PRODUCT_NAME, PRODUCT_TAGLINE, PM_NAME, QUARTER, PUBLISHED_DATE
+═══════════════════════════════════════════════════════════════ -->
+<header>
+  <div class="container">
+    <div class="badge">Product Brain</div>
+    <h1>{{PRODUCT_NAME}}</h1>
+    <p class="tagline">{{PRODUCT_TAGLINE}}</p>
+    <div class="meta-row">
+      <span class="meta-item">
+        <span class="label">PM</span>
+        <span>{{PM_NAME}}</span>
+      </span>
+      <span class="meta-dot"></span>
+      <span class="meta-item">
+        <span class="label">Quarter</span>
+        <span>{{QUARTER}}</span>
+      </span>
+      <span class="meta-dot"></span>
+      <span class="meta-item">
+        <span class="label">Publicado</span>
+        <span>{{PUBLISHED_DATE}}</span>
+      </span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     NAVIGATION
+═══════════════════════════════════════════════════════════════ -->
+<nav>
+  <div class="container">
+    <a href="#sobre">Sobre</a>
+    <a href="#ost">Raciocínio</a>
+    <a href="#decisoes">Decisões</a>
+    <a href="#experimentos">Experimentos</a>
+    <a href="#hipoteses">Em aberto</a>
+  </div>
+</nav>
+
+<main>
+  <div class="container">
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 1 — SOBRE O PRODUTO
+         Preencha: PRODUCT_DESCRIPTION, USERS_DESCRIPTION, STRATEGIC_BET
+    ═══════════════════════════════════════════════════════════════ -->
+    <section id="sobre">
+      <div class="section-header">
+        <h2>Sobre o produto</h2>
+        <p>Contexto, usuários e a aposta central</p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-item">
+          <div class="about-label">O que é</div>
+          <div class="about-value">{{PRODUCT_DESCRIPTION}}</div>
+        </div>
+        <div class="about-item">
+          <div class="about-label">Para quem</div>
+          <div class="about-value">{{USERS_DESCRIPTION}}</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 12px;">
+        <div class="about-label" style="margin-bottom: 8px;">A aposta estratégica</div>
+        <div class="card-body">{{STRATEGIC_BET}}</div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 2 — OST: RACIOCÍNIO DE PRODUTO
+         Repita o bloco .ost-outcome para cada Outcome ativo.
+         Dentro de cada Outcome: repita .ost-node para cada Opportunity.
+         Dentro de cada Opportunity: repita .ost-leaf para Solutions e Experiments.
+    ═══════════════════════════════════════════════════════════════ -->
+    <section id="ost">
+      <div class="section-header">
+        <h2>Como penso o produto</h2>
+        <p>Opportunity Solution Tree — do objetivo à execução</p>
+      </div>
+
+      <!-- OUTCOME 1 -->
+      <div class="ost-outcome">
+        <div class="ost-outcome-header">
+          <div class="ost-icon ost-icon-outcome">🎯</div>
+          <div>
+            <div class="ost-outcome-title">{{OUTCOME_1_TITLE}}</div>
+            <div class="ost-outcome-desc">{{OUTCOME_1_DESC}}</div>
+          </div>
+        </div>
+
+        <div class="ost-children">
+
+          <!-- OPPORTUNITY 1.1 -->
+          <div class="ost-node">
+            <div class="ost-node-header">
+              <div class="ost-icon ost-icon-opp" style="width:26px;height:26px;border-radius:6px;font-size:12px;">🔍</div>
+              <div>
+                <div class="ost-node-title">{{OPP_1_1_TITLE}}</div>
+                <span class="chip chip-green">{{OPP_1_1_CONFIDENCE}}</span>
+              </div>
+            </div>
+            <div class="ost-node-body">{{OPP_1_1_DESC}}</div>
+            <div class="ost-sub">
+              <!-- Solution -->
+              <div class="ost-leaf">
+                <div class="ost-leaf-title">💡 {{SOLUTION_1_1_TITLE}}</div>
+                <div class="ost-leaf-desc">{{SOLUTION_1_1_DESC}}</div>
+              </div>
+              <!-- Experiment -->
+              <div class="ost-leaf">
+                <div class="ost-leaf-title">🧪 {{EXPERIMENT_1_1_TITLE}}</div>
+                <div class="ost-leaf-desc">{{EXPERIMENT_1_1_STATUS}} — {{EXPERIMENT_1_1_DESC}}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- OPPORTUNITY 1.2 — copiar bloco acima se houver mais -->
+          <!-- {{ADDITIONAL_OPPORTUNITIES}} -->
+
+        </div>
+      </div>
+
+      <!-- OUTCOME 2 — copiar bloco acima se houver mais -->
+      <!-- {{ADDITIONAL_OUTCOMES}} -->
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 3 — DECISÕES DOCUMENTADAS
+         Repita .decision-card para cada decisão relevante.
+         Inclua somente decisões aprovadas (status: approved).
+    ═══════════════════════════════════════════════════════════════ -->
+    <section id="decisoes">
+      <div class="section-header">
+        <h2>Decisões documentadas</h2>
+        <p>O que foi decidido, por que, e o que foi descartado</p>
+      </div>
+
+      <!-- DECISION 1 -->
+      <details class="decision-card">
+        <summary>
+          <span class="decision-chevron">›</span>
+          <div class="decision-summary-text">
+            <div class="decision-title">{{DECISION_1_TITLE}}</div>
+            <div class="decision-tldr">{{DECISION_1_TLDR}}</div>
+          </div>
+          <span class="chip chip-green" style="flex-shrink:0;">Aprovada</span>
+        </summary>
+        <div class="decision-body">
+          <h4>Contexto</h4>
+          <p>{{DECISION_1_CONTEXT}}</p>
+
+          <h4>Opções consideradas</h4>
+          <ul class="decision-options">
+            <li>{{DECISION_1_OPTION_A}}</li>
+            <li>{{DECISION_1_OPTION_B}}</li>
+            <li class="chosen">{{DECISION_1_CHOSEN}}</li>
+          </ul>
+
+          <h4>Por que esta</h4>
+          <p>{{DECISION_1_RATIONALE}}</p>
+
+          <div class="card-meta">
+            <span class="chip chip-muted">{{DECISION_1_DATE}}</span>
+          </div>
+        </div>
+      </details>
+
+      <!-- DECISION 2 — copiar bloco acima se houver mais -->
+      <!-- {{ADDITIONAL_DECISIONS}} -->
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 4 — EXPERIMENTOS
+         Repita .experiment-card para cada experimento.
+         Inclua também experimentos que falharam — são os mais valiosos.
+    ═══════════════════════════════════════════════════════════════ -->
+    <section id="experimentos">
+      <div class="section-header">
+        <h2>Experimentos</h2>
+        <p>O que foi testado e o que aprendemos — incluindo os que não funcionaram</p>
+      </div>
+
+      <!-- EXPERIMENT 1 -->
+      <div class="experiment-card">
+        <div class="experiment-header">
+          <div class="experiment-title">{{EXP_1_TITLE}}</div>
+          <span class="chip {{EXP_1_RESULT_CHIP}}">{{EXP_1_RESULT_LABEL}}</span>
+        </div>
+        <div class="experiment-hypothesis">Hipótese: {{EXP_1_HYPOTHESIS}}</div>
+        <div class="experiment-result">
+          <strong>O que aprendemos:</strong> {{EXP_1_LEARNING}}
+        </div>
+      </div>
+
+      <!-- EXPERIMENT 2 — copiar bloco acima se houver mais -->
+      <!-- {{ADDITIONAL_EXPERIMENTS}} -->
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 5 — HIPÓTESES ABERTAS
+         Liste as hipóteses de library/05-open-hypotheses.md
+    ═══════════════════════════════════════════════════════════════ -->
+    <section id="hipoteses">
+      <div class="section-header">
+        <h2>O que ainda não sei</h2>
+        <p>Hipóteses abertas que guiam o próximo ciclo de descoberta</p>
+      </div>
+
+      <ul class="hypothesis-list">
+        <li class="hypothesis-item">
+          <div class="hypothesis-dot"></div>
+          <div class="hypothesis-text">{{HYPOTHESIS_1}}</div>
+        </li>
+        <li class="hypothesis-item">
+          <div class="hypothesis-dot"></div>
+          <div class="hypothesis-text">{{HYPOTHESIS_2}}</div>
+        </li>
+        <li class="hypothesis-item">
+          <div class="hypothesis-dot"></div>
+          <div class="hypothesis-text">{{HYPOTHESIS_3}}</div>
+        </li>
+        <!-- {{ADDITIONAL_HYPOTHESES}} -->
+      </ul>
+    </section>
+
+  </div><!-- /container -->
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     FOOTER
+     Substitua: PM_NAME, PRODUCT_NAME
+═══════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-left">
+      <span>{{PM_NAME}}</span>
+    </div>
+    <div class="footer-brand">
+      Gerado com <a href="https://github.com/bicodeurubu/grafo-pm" target="_blank">Grafo PM</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

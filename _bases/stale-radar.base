@@ -1,0 +1,18 @@
+{
+  "filters": [
+    {
+      "field": "updated",
+      "operator": "is_before",
+      "value": "{{today - 30 days}}"
+    },
+    {
+      "field": "status",
+      "operator": "is_not_in",
+      "value": ["archived", "invalidated"]
+    }
+  ],
+  "sort": [
+    { "field": "updated", "direction": "asc" }
+  ],
+  "columns": ["type", "status", "confidence", "tldr", "updated"]
+}

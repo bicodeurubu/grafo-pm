@@ -1,0 +1,13 @@
+{
+  "filters": [
+    {
+      "field": "type",
+      "operator": "is",
+      "value": "decision"
+    }
+  ],
+  "sort": [
+    { "field": "created", "direction": "desc" }
+  ],
+  "columns": ["status", "confidence", "tldr", "created"]
+}

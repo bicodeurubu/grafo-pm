@@ -1,0 +1,18 @@
+{
+  "filters": [
+    {
+      "field": "type",
+      "operator": "is_in",
+      "value": ["research", "data"]
+    },
+    {
+      "field": "bias_checked",
+      "operator": "is",
+      "value": false
+    }
+  ],
+  "sort": [
+    { "field": "updated", "direction": "asc" }
+  ],
+  "columns": ["type", "status", "confidence", "bias_checked", "tldr", "updated"]
+}

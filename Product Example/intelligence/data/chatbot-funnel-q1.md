@@ -1,7 +1,12 @@
 ---
 type: data
 status: active
+confidence: high
+bias_checked: true
+freshness_days: 30
 tldr: Q1 2026 chatbot resolution funnel — 38% of conversations exit at intent classification (highest exit point), only 41% resolve autonomously
+created: 2026-04-01
+updated: 2026-04-01
 ---
 
 # Data: Chatbot Resolution Funnel — Q1 2026

@@ -1,7 +1,11 @@
 ---
 type: research
 status: active
+confidence: high
+bias_checked: true
 tldr: Internal CS team interview — agents estimate 40% of escalated tickets have a wrong first chatbot response; team spends 15min/ticket on context-recovery from bot failures
+created: 2026-03-20
+updated: 2026-03-20
 ---
 
 # Research: CS Team — Voice of Internal Customer

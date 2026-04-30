@@ -3,7 +3,10 @@ type: outcome
 status: active
 confidence: high
 explored: false
+quarter: Q2-2026
 tldr: Increase chatbot autonomous resolution rate from 41% to 60% by end of Q2-2026, reducing support costs and improving CX
+created: 2026-04-01
+updated: 2026-04-14
 ---
 
 # Outcome: Increase Autonomous Resolution Rate — Q2 2026

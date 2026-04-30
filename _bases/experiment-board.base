@@ -1,0 +1,14 @@
+{
+  "filters": [
+    {
+      "field": "type",
+      "operator": "is",
+      "value": "experiment"
+    }
+  ],
+  "groupBy": "result",
+  "sort": [
+    { "field": "updated", "direction": "desc" }
+  ],
+  "columns": ["status", "result", "confidence", "quarter", "tldr", "updated"]
+}

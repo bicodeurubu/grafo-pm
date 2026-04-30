@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>graphify - /sessions/youthful-sharp-davinci/mnt/Grafo PM/Product Example/graphify-out/graph.html</title>
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; height: 100vh; overflow: hidden; }
+  #graph { flex: 1; }
+  #sidebar { width: 280px; background: #1a1a2e; border-left: 1px solid #2a2a4e; display: flex; flex-direction: column; overflow: hidden; }
+  #search-wrap { padding: 12px; border-bottom: 1px solid #2a2a4e; }
+  #search { width: 100%; background: #0f0f1a; border: 1px solid #3a3a5e; color: #e0e0e0; padding: 7px 10px; border-radius: 6px; font-size: 13px; outline: none; }
+  #search:focus { border-color: #4E79A7; }
+  #search-results { max-height: 140px; overflow-y: auto; padding: 4px 12px; border-bottom: 1px solid #2a2a4e; display: none; }
+  .search-item { padding: 4px 6px; cursor: pointer; border-radius: 4px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .search-item:hover { background: #2a2a4e; }
+  #info-panel { padding: 14px; border-bottom: 1px solid #2a2a4e; min-height: 140px; }
+  #info-panel h3 { font-size: 13px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  #info-content { font-size: 13px; color: #ccc; line-height: 1.6; }
+  #info-content .field { margin-bottom: 5px; }
+  #info-content .field b { color: #e0e0e0; }
+  #info-content .empty { color: #555; font-style: italic; }
+  .neighbor-link { display: block; padding: 2px 6px; margin: 2px 0; border-radius: 3px; cursor: pointer; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid #333; }
+  .neighbor-link:hover { background: #2a2a4e; }
+  #neighbors-list { max-height: 160px; overflow-y: auto; margin-top: 4px; }
+  #legend-wrap { flex: 1; overflow-y: auto; padding: 12px; }
+  #legend-wrap h3 { font-size: 13px; color: #aaa; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; border-radius: 4px; font-size: 12px; }
+  .legend-item:hover { background: #2a2a4e; padding-left: 4px; }
+  .legend-item.dimmed { opacity: 0.35; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .legend-count { color: #666; font-size: 11px; }
+  #stats { padding: 10px 14px; border-top: 1px solid #2a2a4e; font-size: 11px; color: #555; }
+  #legend-controls { display: flex; gap: 6px; margin-bottom: 8px; }
+  #legend-controls button { flex: 1; background: #0f0f1a; border: 1px solid #3a3a5e; color: #aaa; padding: 4px 0; border-radius: 4px; font-size: 11px; cursor: pointer; }
+  #legend-controls button:hover { border-color: #4E79A7; color: #e0e0e0; }
+</style>
+</head>
+<body>
+<div id="graph"></div>
+<div id="sidebar">
+  <div id="search-wrap">
+    <input id="search" type="text" placeholder="Search nodes..." autocomplete="off">
+    <div id="search-results"></div>
+  </div>
+  <div id="info-panel">
+    <h3>Node Info</h3>
+    <div id="info-content"><span class="empty">Click a node to inspect it</span></div>
+  </div>
+  <div id="legend-wrap">
+    <h3>Communities</h3>
+    <div id="legend-controls">
+      <button onclick="toggleAllCommunities(false)">Show All</button>
+      <button onclick="toggleAllCommunities(true)">Hide All</button>
+    </div>
+    <div id="legend"></div>
+  </div>
+  <div id="stats">33 nodes &middot; 46 edges &middot; 6 communities</div>
+</div>
+<script>
+const RAW_NODES = [{"id": "acme_support_ai", "label": "Acme Support AI", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Acme Support AI", "community": 3, "community_name": "Rule-based Classifier / Acme Support AI", "source_file": "SIGNAL.md", "file_type": "document", "degree": 2}, {"id": "autonomous_resolution_rate", "label": "Autonomous Resolution Rate", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Autonomous Resolution Rate", "community": 5, "community_name": "A/B Test Intent v2 / Autonomous Resolution Rate", "source_file": "intelligence/data/resolution-rate-baseline.md", "file_type": "document", "degree": 3}, {"id": "intent_misclassification", "label": "Intent Misclassification", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Intent Misclassification", "community": 2, "community_name": "Escalation / Intent Misclassification", "source_file": "intelligence/data/chatbot-funnel-q1.md", "file_type": "document", "degree": 3}, {"id": "intent_classification_gap", "label": "Intent Classification Gap", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 40.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Intent Classification Gap", "community": 0, "community_name": "Intent Classification Gap / Multilingual Coverage Gap", "source_file": "opportunities/intent-classification-gap.md", "file_type": "document", "degree": 8}, {"id": "multilingual_coverage_gap", "label": "Multilingual Coverage Gap", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 32.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Multilingual Coverage Gap", "community": 0, "community_name": "Intent Classification Gap / Multilingual Coverage Gap", "source_file": "opportunities/multilingual-coverage-gap.md", "file_type": "document", "degree": 6}, {"id": "intent_classifier_v2", "label": "Intent Classifier v2", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Intent Classifier v2", "community": 5, "community_name": "A/B Test Intent v2 / Autonomous Resolution Rate", "source_file": "solutions/prd-intent-classifier-v2.md", "file_type": "document", "degree": 3}, {"id": "a_b_test_intent_v2", "label": "A/B Test Intent v2", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "A/B Test Intent v2", "community": 5, "community_name": "A/B Test Intent v2 / Autonomous Resolution Rate", "source_file": "experiments/intent-classifier-v2-ab.md", "file_type": "document", "degree": 3}, {"id": "q2_autonomous_resolution_okr", "label": "Q2 Autonomous Resolution OKR", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 25.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Q2 Autonomous Resolution OKR", "community": 0, "community_name": "Intent Classification Gap / Multilingual Coverage Gap", "source_file": "outcomes/increase-autonomous-resolution-q2.md", "file_type": "document", "degree": 4}, {"id": "decision__intent_first_q2", "label": "Decision: Intent First Q2", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 28.8, "font": {"size": 12, "color": "#ffffff"}, "title": "Decision: Intent First Q2", "community": 0, "community_name": "Intent Classification Gap / Multilingual Coverage Gap", "source_file": "intelligence/decisions/prioritize-intent-over-multilingual.md", "file_type": "document", "degree": 5}, {"id": "latam_customers", "label": "LATAM Customers", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "LATAM Customers", "community": 2, "community_name": "Escalation / Intent Misclassification", "source_file": "opportunities/multilingual-coverage-gap.md", "file_type": "document", "degree": 3}, {"id": "english_customers", "label": "English Customers", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "English Customers", "community": 0, "community_name": "Intent Classification Gap / Multilingual Coverage Gap", "source_file": "intelligence/data/chatbot-funnel-q1.md", "file_type": "document", "degree": 1}, {"id": "cs_team", "label": "CS Team", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "CS Team", "community": 2, "community_name": "Escalation / Intent Misclassification", "source_file": "intelligence/research/cs-team-voice-of-customer.md", "file_type": "document", "degree": 2}, {"id": "ml_engineers", "label": "ML Engineers", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "ML Engineers", "community": 1, "community_name": "Fine-tuned LLM Classifier / Confidence Score", "source_file": "solutions/prd-intent-classifier-v2.md", "file_type": "document", "degree": 1}, {"id": "rule_based_classifier", "label": "Rule-based Classifier", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Rule-based Classifier", "community": 3, "community_name": "Rule-based Classifier / Acme Support AI", "source_file": "solutions/prd-intent-classifier-v2.md", "file_type": "document", "degree": 3}, {"id": "fine_tuned_llm_classifier", "label": "Fine-tuned LLM Classifier", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 25.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Fine-tuned LLM Classifier", "community": 1, "community_name": "Fine-tuned LLM Classifier / Confidence Score", "source_file": "solutions/prd-intent-classifier-v2.md", "file_type": "document", "degree": 4}, {"id": "knowledge_base", "label": "Knowledge Base", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Knowledge Base", "community": 3, "community_name": "Rule-based Classifier / Acme Support AI", "source_file": "intelligence/data/resolution-rate-baseline.md", "file_type": "document", "degree": 2}, {"id": "escalation", "label": "Escalation", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 28.8, "font": {"size": 12, "color": "#ffffff"}, "title": "Escalation", "community": 2, "community_name": "Escalation / Intent Misclassification", "source_file": "intelligence/data/chatbot-funnel-q1.md", "file_type": "document", "degree": 5}, {"id": "chatbot_funnel_q1", "label": "Chatbot Funnel Q1", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Chatbot Funnel Q1", "community": 0, "community_name": "Intent Classification Gap / Multilingual Coverage Gap", "source_file": "intelligence/data/chatbot-funnel-q1.md", "file_type": "document", "degree": 3}, {"id": "interview_synthesis_q1", "label": "Interview Synthesis Q1", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Interview Synthesis Q1", "community": 0, "community_name": "Intent Classification Gap / Multilingual Coverage Gap", "source_file": "intelligence/research/interview-synthesis-q1.md", "file_type": "document", "degree": 3}, {"id": "cs_voice_of_customer", "label": "CS Voice of Customer", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "CS Voice of Customer", "community": 4, "community_name": "Cost per Ticket / CS Voice of Customer", "source_file": "intelligence/research/cs-team-voice-of-customer.md", "file_type": "document", "degree": 2}, {"id": "cost_per_ticket", "label": "Cost per Ticket", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Cost per Ticket", "community": 4, "community_name": "Cost per Ticket / CS Voice of Customer", "source_file": "outcomes/increase-autonomous-resolution-q2.md", "file_type": "document", "degree": 3}, {"id": "learned_helplessness", "label": "Learned Helplessness", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Learned Helplessness", "community": 2, "community_name": "Escalation / Intent Misclassification", "source_file": "intelligence/research/interview-synthesis-q1.md", "file_type": "document", "degree": 2}, {"id": "confidence_score", "label": "Confidence Score", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Confidence Score", "community": 1, "community_name": "Fine-tuned LLM Classifier / Confidence Score", "source_file": "solutions/prd-intent-classifier-v2.md", "file_type": "document", "degree": 2}, {"id": "clarifying_question_ux", "label": "Clarifying Question UX", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Clarifying Question UX", "community": 1, "community_name": "Fine-tuned LLM Classifier / Confidence Score", "source_file": "solutions/prd-intent-classifier-v2.md", "file_type": "document", "degree": 1}, {"id": "training_data_pipeline", "label": "Training Data Pipeline", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Training Data Pipeline", "community": 1, "community_name": "Fine-tuned LLM Classifier / Confidence Score", "source_file": "ops/sprints/sprint-q2-w1.md", "file_type": "document", "degree": 2}, {"id": "q2_planning_meeting", "label": "Q2 Planning Meeting", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Q2 Planning Meeting", "community": 0, "community_name": "Intent Classification Gap / Multilingual Coverage Gap", "source_file": "ops/meetings/q2-planning-alignment.md", "file_type": "document", "degree": 3}, {"id": "sprint_q2_w1", "label": "Sprint Q2-W1", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Sprint Q2-W1", "community": 1, "community_name": "Fine-tuned LLM Classifier / Confidence Score", "source_file": "ops/sprints/sprint-q2-w1.md", "file_type": "document", "degree": 2}, {"id": "latam_churn", "label": "LATAM Churn", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "LATAM Churn", "community": 2, "community_name": "Escalation / Intent Misclassification", "source_file": "opportunities/multilingual-coverage-gap.md", "file_type": "document", "degree": 1}, {"id": "opportunity_solution_tree", "label": "Opportunity Solution Tree", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Opportunity Solution Tree", "community": 0, "community_name": "Intent Classification Gap / Multilingual Coverage Gap", "source_file": "SIGNAL.md", "file_type": "document", "degree": 2}, {"id": "human_handle_time", "label": "Human Handle Time", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Human Handle Time", "community": 4, "community_name": "Cost per Ticket / CS Voice of Customer", "source_file": "intelligence/research/cs-team-voice-of-customer.md", "file_type": "document", "degree": 2}, {"id": "kb_expansion_diminishing_returns", "label": "KB Expansion Diminishing Returns", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "KB Expansion Diminishing Returns", "community": 3, "community_name": "Rule-based Classifier / Acme Support AI", "source_file": "intelligence/data/resolution-rate-baseline.md", "file_type": "document", "degree": 2}, {"id": "q3_multilingual_expansion", "label": "Q3 Multilingual Expansion", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Q3 Multilingual Expansion", "community": 0, "community_name": "Intent Classification Gap / Multilingual Coverage Gap", "source_file": "intelligence/decisions/prioritize-intent-over-multilingual.md", "file_type": "document", "degree": 2}, {"id": "experiment_infrastructure", "label": "Experiment Infrastructure", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Experiment Infrastructure", "community": 1, "community_name": "Fine-tuned LLM Classifier / Confidence Score", "source_file": "ops/sprints/sprint-q2-w1.md", "file_type": "document", "degree": 2}];
+const RAW_EDGES = [{"from": "acme_support_ai", "to": "rule_based_classifier", "label": "uses", "title": "uses [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "acme_support_ai", "to": "knowledge_base", "label": "uses", "title": "uses [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "autonomous_resolution_rate", "to": "a_b_test_intent_v2", "label": "measures", "title": "measures [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "autonomous_resolution_rate", "to": "escalation", "label": "reduces", "title": "reduces [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "autonomous_resolution_rate", "to": "q2_autonomous_resolution_okr", "label": "measures", "title": "measures [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "intent_misclassification", "to": "escalation", "label": "causes", "title": "causes [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "intent_misclassification", "to": "learned_helplessness", "label": "triggers", "title": "triggers [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "intent_misclassification", "to": "rule_based_classifier", "label": "root_cause_of", "title": "root_cause_of [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "intent_classification_gap", "to": "q2_autonomous_resolution_okr", "label": "contributes_to", "title": "contributes_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "intent_classification_gap", "to": "intent_classifier_v2", "label": "addresses", "title": "addresses [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "intent_classification_gap", "to": "chatbot_funnel_q1", "label": "evidences", "title": "evidences [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "intent_classification_gap", "to": "interview_synthesis_q1", "label": "confirms", "title": "confirms [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "intent_classification_gap", "to": "cs_voice_of_customer", "label": "corroborates", "title": "corroborates [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "intent_classification_gap", "to": "english_customers", "label": "affected_by", "title": "affected_by [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "intent_classification_gap", "to": "opportunity_solution_tree", "label": "organizes", "title": "organizes [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "intent_classification_gap", "to": "q3_multilingual_expansion", "label": "architecture_enables", "title": "architecture_enables [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "multilingual_coverage_gap", "to": "q2_autonomous_resolution_okr", "label": "contributes_to", "title": "contributes_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "multilingual_coverage_gap", "to": "decision__intent_first_q2", "label": "defers_solution_for", "title": "defers_solution_for [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "multilingual_coverage_gap", "to": "chatbot_funnel_q1", "label": "evidences", "title": "evidences [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "multilingual_coverage_gap", "to": "interview_synthesis_q1", "label": "confirms", "title": "confirms [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "multilingual_coverage_gap", "to": "latam_customers", "label": "affected_by", "title": "affected_by [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "multilingual_coverage_gap", "to": "opportunity_solution_tree", "label": "organizes", "title": "organizes [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "intent_classifier_v2", "to": "a_b_test_intent_v2", "label": "tests", "title": "tests [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "intent_classifier_v2", "to": "decision__intent_first_q2", "label": "enables", "title": "enables [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "a_b_test_intent_v2", "to": "experiment_infrastructure", "label": "enables", "title": "enables [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "q2_autonomous_resolution_okr", "to": "cost_per_ticket", "label": "secondary_target_of", "title": "secondary_target_of [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "decision__intent_first_q2", "to": "q3_multilingual_expansion", "label": "defers", "title": "defers [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "decision__intent_first_q2", "to": "kb_expansion_diminishing_returns", "label": "informed", "title": "informed [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "decision__intent_first_q2", "to": "q2_planning_meeting", "label": "produced", "title": "produced [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "latam_customers", "to": "latam_churn", "label": "drives", "title": "drives [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "latam_customers", "to": "cs_team", "label": "manually_routes", "title": "manually_routes [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "cs_team", "to": "escalation", "label": "handles", "title": "handles [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "ml_engineers", "to": "fine_tuned_llm_classifier", "label": "builds", "title": "builds [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "rule_based_classifier", "to": "fine_tuned_llm_classifier", "label": "replaces", "title": "replaces [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "fine_tuned_llm_classifier", "to": "confidence_score", "label": "outputs", "title": "outputs [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "fine_tuned_llm_classifier", "to": "training_data_pipeline", "label": "feeds", "title": "feeds [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "knowledge_base", "to": "kb_expansion_diminishing_returns", "label": "exhibits", "title": "exhibits [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "escalation", "to": "cost_per_ticket", "label": "increases", "title": "increases [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "escalation", "to": "learned_helplessness", "label": "leads_to", "title": "leads_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "chatbot_funnel_q1", "to": "q2_planning_meeting", "label": "reviewed", "title": "reviewed [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "interview_synthesis_q1", "to": "q2_planning_meeting", "label": "reviewed", "title": "reviewed [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "cs_voice_of_customer", "to": "human_handle_time", "label": "quantifies", "title": "quantifies [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "cost_per_ticket", "to": "human_handle_time", "label": "component_of", "title": "component_of [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "confidence_score", "to": "clarifying_question_ux", "label": "triggers", "title": "triggers [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "training_data_pipeline", "to": "sprint_q2_w1", "label": "delivers", "title": "delivers [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "sprint_q2_w1", "to": "experiment_infrastructure", "label": "delivers", "title": "delivers [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}];
+const LEGEND = [{"cid": 0, "color": "#4E79A7", "label": "Intent Classification Gap / Multilingual Coverage Gap", "count": 10}, {"cid": 1, "color": "#F28E2B", "label": "Fine-tuned LLM Classifier / Confidence Score", "count": 7}, {"cid": 2, "color": "#E15759", "label": "Escalation / Intent Misclassification", "count": 6}, {"cid": 3, "color": "#76B7B2", "label": "Rule-based Classifier / Acme Support AI", "count": 4}, {"cid": 4, "color": "#59A14F", "label": "Cost per Ticket / CS Voice of Customer", "count": 3}, {"cid": 5, "color": "#EDC948", "label": "A/B Test Intent v2 / Autonomous Resolution Rate", "count": 3}];
+
+// HTML-escape helper — prevents XSS when injecting graph data into innerHTML
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Build vis datasets
+const nodesDS = new vis.DataSet(RAW_NODES.map(n => ({
+  id: n.id, label: n.label, color: n.color, size: n.size,
+  font: n.font, title: n.title,
+  _community: n.community, _community_name: n.community_name,
+  _source_file: n.source_file, _file_type: n.file_type, _degree: n.degree,
+})));
+
+const edgesDS = new vis.DataSet(RAW_EDGES.map((e, i) => ({
+  id: i, from: e.from, to: e.to,
+  label: '',
+  title: e.title,
+  dashes: e.dashes,
+  width: e.width,
+  color: e.color,
+  arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+})));
+
+const container = document.getElementById('graph');
+const network = new vis.Network(container, { nodes: nodesDS, edges: edgesDS }, {
+  physics: {
+    enabled: true,
+    solver: 'forceAtlas2Based',
+    forceAtlas2Based: {
+      gravitationalConstant: -60,
+      centralGravity: 0.005,
+      springLength: 120,
+      springConstant: 0.08,
+      damping: 0.4,
+      avoidOverlap: 0.8,
+    },
+    stabilization: { iterations: 200, fit: true },
+  },
+  interaction: {
+    hover: true,
+    tooltipDelay: 100,
+    hideEdgesOnDrag: true,
+    navigationButtons: false,
+    keyboard: false,
+  },
+  nodes: { shape: 'dot', borderWidth: 1.5 },
+  edges: { smooth: { type: 'continuous', roundness: 0.2 }, selectionWidth: 3 },
+});
+
+network.once('stabilizationIterationsDone', () => {
+  network.setOptions({ physics: { enabled: false } });
+});
+
+function showInfo(nodeId) {
+  const n = nodesDS.get(nodeId);
+  if (!n) return;
+  const neighborIds = network.getConnectedNodes(nodeId);
+  const neighborItems = neighborIds.map(nid => {
+    const nb = nodesDS.get(nid);
+    const color = nb ? nb.color.background : '#555';
+    return `<span class="neighbor-link" style="border-left-color:${esc(color)}" onclick="focusNode(${JSON.stringify(nid)})">${esc(nb ? nb.label : nid)}</span>`;
+  }).join('');
+  document.getElementById('info-content').innerHTML = `
+    <div class="field"><b>${esc(n.label)}</b></div>
+    <div class="field">Type: ${esc(n._file_type || 'unknown')}</div>
+    <div class="field">Community: ${esc(n._community_name)}</div>
+    <div class="field">Source: ${esc(n._source_file || '-')}</div>
+    <div class="field">Degree: ${n._degree}</div>
+    ${neighborIds.length ? `<div class="field" style="margin-top:8px;color:#aaa;font-size:11px">Neighbors (${neighborIds.length})</div><div id="neighbors-list">${neighborItems}</div>` : ''}
+  `;
+}
+
+function focusNode(nodeId) {
+  network.focus(nodeId, { scale: 1.4, animation: true });
+  network.selectNodes([nodeId]);
+  showInfo(nodeId);
+}
+
+// Track hovered node — hover detection is more reliable than click params
+let hoveredNodeId = null;
+network.on('hoverNode', params => {
+  hoveredNodeId = params.node;
+  container.style.cursor = 'pointer';
+});
+network.on('blurNode', () => {
+  hoveredNodeId = null;
+  container.style.cursor = 'default';
+});
+container.addEventListener('click', () => {
+  if (hoveredNodeId !== null) {
+    showInfo(hoveredNodeId);
+    network.selectNodes([hoveredNodeId]);
+  }
+});
+network.on('click', params => {
+  if (params.nodes.length > 0) {
+    showInfo(params.nodes[0]);
+  } else if (hoveredNodeId === null) {
+    document.getElementById('info-content').innerHTML = '<span class="empty">Click a node to inspect it</span>';
+  }
+});
+
+const searchInput = document.getElementById('search');
+const searchResults = document.getElementById('search-results');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  searchResults.innerHTML = '';
+  if (!q) { searchResults.style.display = 'none'; return; }
+  const matches = RAW_NODES.filter(n => n.label.toLowerCase().includes(q)).slice(0, 20);
+  if (!matches.length) { searchResults.style.display = 'none'; return; }
+  searchResults.style.display = 'block';
+  matches.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'search-item';
+    el.textContent = n.label;
+    el.style.borderLeft = `3px solid ${n.color.background}`;
+    el.style.paddingLeft = '8px';
+    el.onclick = () => {
+      network.focus(n.id, { scale: 1.5, animation: true });
+      network.selectNodes([n.id]);
+      showInfo(n.id);
+      searchResults.style.display = 'none';
+      searchInput.value = '';
+    };
+    searchResults.appendChild(el);
+  });
+});
+document.addEventListener('click', e => {
+  if (!searchResults.contains(e.target) && e.target !== searchInput)
+    searchResults.style.display = 'none';
+});
+
+const hiddenCommunities = new Set();
+
+function toggleAllCommunities(hide) {
+  document.querySelectorAll('.legend-item').forEach(item => {
+    hide ? item.classList.add('dimmed') : item.classList.remove('dimmed');
+  });
+  LEGEND.forEach(c => {
+    if (hide) hiddenCommunities.add(c.cid); else hiddenCommunities.delete(c.cid);
+  });
+  const updates = RAW_NODES.map(n => ({ id: n.id, hidden: hide }));
+  nodesDS.update(updates);
+}
+
+const legendEl = document.getElementById('legend');
+LEGEND.forEach(c => {
+  const item = document.createElement('div');
+  item.className = 'legend-item';
+  item.innerHTML = `<div class="legend-dot" style="background:${c.color}"></div>
+    <span class="legend-label">${c.label}</span>
+    <span class="legend-count">${c.count}</span>`;
+  item.onclick = () => {
+    if (hiddenCommunities.has(c.cid)) {
+      hiddenCommunities.delete(c.cid);
+      item.classList.remove('dimmed');
+    } else {
+      hiddenCommunities.add(c.cid);
+      item.classList.add('dimmed');
+    }
+    const updates = RAW_NODES
+      .filter(n => n.community === c.cid)
+      .map(n => ({ id: n.id, hidden: hiddenCommunities.has(c.cid) }));
+    nodesDS.update(updates);
+  };
+  legendEl.appendChild(item);
+});
+</script>
+<script>
+// Render hyperedges as shaded regions
+const hyperedges = [];
+// afterDrawing passes ctx already transformed to network coordinate space.
+// Draw node positions raw — no manual pan/zoom/DPR math needed.
+network.on('afterDrawing', function(ctx) {
+    hyperedges.forEach(h => {
+        const positions = h.nodes
+            .map(nid => network.getPositions([nid])[nid])
+            .filter(p => p !== undefined);
+        if (positions.length < 2) return;
+        ctx.save();
+        ctx.globalAlpha = 0.12;
+        ctx.fillStyle = '#6366f1';
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        // Centroid and expanded hull in network coordinates
+        const cx = positions.reduce((s, p) => s + p.x, 0) / positions.length;
+        const cy = positions.reduce((s, p) => s + p.y, 0) / positions.length;
+        const expanded = positions.map(p => ({
+            x: cx + (p.x - cx) * 1.15,
+            y: cy + (p.y - cy) * 1.15
+        }));
+        ctx.moveTo(expanded[0].x, expanded[0].y);
+        expanded.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 0.4;
+        ctx.stroke();
+        // Label
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = '#4f46e5';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(h.label, cx, cy - 5);
+        ctx.restore();
+    });
+});
+</script>
+</body>
+</html>

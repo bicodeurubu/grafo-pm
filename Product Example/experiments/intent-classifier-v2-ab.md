@@ -3,7 +3,11 @@ type: experiment
 status: active
 confidence: medium
 explored: false
+result: running
+quarter: Q2-2026
 tldr: A/B test of the new LLM intent classifier vs rule-based baseline — hypothesis: misclassification drops from 38% to ≤10%
+created: 2026-04-21
+updated: 2026-04-21
 ---
 
 # Experiment: Intent Classifier v2 — A/B Test

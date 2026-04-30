@@ -2,6 +2,8 @@
 type: sprint
 status: archived
 tldr: Q2 Week 1–2 sprint — goals: PRD approved, training data pipeline set up, experiment infrastructure ready; team of 4 (2 ML, 1 design, 1 BE)
+created: 2026-04-14
+updated: 2026-04-25
 ---
 
 # Sprint: Q2 Week 1–2 (2026-04-14 to 2026-04-25)

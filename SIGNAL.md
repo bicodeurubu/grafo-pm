@@ -59,19 +59,57 @@ OKR core: [uma frase]
 
 ## 2. Schema
 
-Toda página tem **3 campos de frontmatter**. O LLM preenche tudo — o PM nunca edita YAML diretamente.
+O LLM preenche todo o frontmatter — o PM nunca edita YAML diretamente.
+
+### Campos universais — toda página (exceto `inbox/`)
 
 ```yaml
 ---
-type: outcome | opportunity | solution | experiment | decision | research | data | meeting | sprint
-status: draft | active | validated | invalidated | archived | approved
-tldr: uma frase — o que esta página diz
+type:    outcome | opportunity | solution | experiment | decision | research | data | meeting | sprint
+status:  draft | active | validated | invalidated | archived | approved
+tldr:    uma frase — o que esta página diz
+created: YYYY-MM-DD   # preenchido pelo LLM na criação
+updated: YYYY-MM-DD   # atualizado pelo LLM a cada edição
 ---
 ```
 
+### Campos adicionais por tipo
+
+| Tipo | Campo | Valores |
+|------|-------|---------|
+| `outcome` · `opportunity` · `solution` · `experiment` | `confidence` | `low` · `medium` · `high` |
+| `outcome` · `opportunity` · `solution` · `experiment` | `explored` | `true` · `false` |
+| `research` · `data` · `decision` | `confidence` | `low` · `medium` · `high` |
+| `research` · `data` | `bias_checked` | `true` · `false` |
+| `data` | `freshness_days` | inteiro (padrão: `30`) |
+| `experiment` | `result` | `pending` · `running` · `positive` · `negative` · `inconclusive` |
+
+**Campos opcionais** — LLM preenche quando relevante:
+- `quarter: Q2-2026` — qualquer OST node; habilita filtro por quarter nas views `.base`
+- `impact: low | medium | high` + `effort: S | M | L` — em `solution`; habilita priorização visual
+
 **Regras:**
-- `status: approved` em `type: decision` torna a página imutável — nunca editar o corpo, apenas criar uma decisão que a supersede.
+- `status: approved` em `type: decision` → página imutável. Para mudar, criar nova decisão que supersede e linka de volta.
+- `bias_checked: false` mantém `status: draft` em `research` e `data` até ser preenchido.
+- `freshness_days` define em quantos dias um `data` page fica stale a partir do `updated`. Padrão `30`; override por página quando o dado tem janela diferente (ex: dado de mercado = `90`, métrica de produto = `7`).
+- `inbox/` não tem frontmatter — é zona de dump. O LLM processa e cria as páginas corretas.
 - Todo o resto é expresso via `[[wikilinks]]` no corpo. São o tecido conectivo do brain.
+
+### Obsidian Bases — views ao vivo
+
+Os campos acima habilitam `.base` files no Obsidian — tabelas e boards que se atualizam com o vault sem nenhuma ação do PM. Os arquivos ficam em `_bases/` e são gerados pelo workflow `/bases`.
+
+| View | O que detecta |
+|------|---------------|
+| **OST Board** | todos os OST nodes agrupados por `type` + `status` |
+| **Unexplored Gaps** | `explored: false` — o que nunca foi investigado |
+| **Confidence Map** | `confidence: low` ordenado por `updated` asc — fraquezas mais antigas primeiro |
+| **Stale Radar** | `updated` anterior a 30 dias — tudo que não foi tocado |
+| **Data Freshness** | `type: data` prestes a expirar pelo `freshness_days` |
+| **Research Integrity** | `type: research` ou `data` com `bias_checked: false` |
+| **Decision Log** | `type: decision` ordenado por `created` desc — trilha imutável |
+| **Experiment Board** | `type: experiment` agrupado por `result` |
+| **Library Health** | arquivos de `library/` ordenados por `last_reviewed` |
 
 ---
 
@@ -149,9 +187,11 @@ Reportar sempre:
 ⚡ Gaps detectados:
 • [opportunity] sem solutions linkadas
 • [solution] sem experiments planejados
-• [experiment] sem métrica definida
-• [data page] janela de freshness fecha em N dias — X solutions dependem dela
-• [página] confidence incerta — revisão necessária
+• [experiment] sem métrica definida ou result: pending há mais de 14 dias
+• [data page] janela de freshness fecha em N dias (updated + freshness_days) — X solutions dependem dela
+• [página] confidence: low + updated há mais de 30 dias — revisão necessária
+• [research/data] bias_checked: false — ainda em draft
+• [página] sem updated há mais de 60 dias — possivelmente abandonada
 • [library/XX] status: stale — N páginas OST o referenciam via wikilink
 • [library/07-agent-instructions] desatualizado — itens 01–06 foram editados após a última revisão do 07
 ```
@@ -211,6 +251,15 @@ Quando o PM diz *"salva essa conversa"* ou *"salva como [slug]"*:
 3. Linkar a páginas existentes relacionadas
 4. Commit
 
+**`/bases`** — gerar ou atualizar os `.base` files em `_bases/`  
+Quando o PM diz *"/bases"* ou *"atualiza as views"*:
+1. Ler o vault e verificar quais types e campos existem
+2. Gerar (ou sobrescrever) um `.base` file para cada view da tabela na seção 2
+3. Salvar em `_bases/[nome-da-view].base`
+4. Commit: `feat(bases): generate obsidian base views`
+
+Os `.base` files são declarativos (JSON/YAML) — o Obsidian os renderiza. O PM nunca edita manualmente.
+
 **`/autoresearch [tópico]`** — pesquisa web multi-round que gera páginas conectadas  
 Padrão: 3 rounds, 5 fontes max, parar quando confiança atingir `medium` ou superior.
 1. Buscar e sintetizar cada fonte em página `data` ou `research`
@@ -219,7 +268,26 @@ Padrão: 3 rounds, 5 fontes max, parar quando confiança atingir `medium` ou sup
 5. Reportar: páginas criadas, contradições, gaps, nível de confiança
 
 **`/publish`** — exportar o vault como portfólio público de raciocínio de produto  
-Gera `_public/index.html` — uma página estática, auto-contida, deployável no GitHub Pages.
+Gera `_public/index.html` — uma página estática, auto-contida, deployável no GitHub Pages. Não é um dump do vault — é uma curadoria do raciocínio: OST, decisões com contexto, experimentos, hipóteses abertas.
+
+**O que aparece na página:**
+
+| Seção | Fonte | Padrão |
+|---|---|---|
+| Sobre o produto | `library/01-product-context.md` | ✅ incluído |
+| Para quem | `library/02-user-truths.md` | ✅ incluído |
+| A aposta estratégica | `library/03-strategic-bets.md` | ✅ incluído |
+| OST completo | `outcomes/` + `opportunities/` + `solutions/` + `experiments/` | ✅ incluído |
+| Decisões documentadas | `intelligence/decisions/` (só `status: approved`) | ✅ incluído |
+| Hipóteses abertas | `library/05-open-hypotheses.md` | ✅ incluído |
+| Dados e métricas | `library/06-data-anchors.md` | ❌ excluído |
+| Constraints de decisão | `library/04-decision-constraints.md` | ❌ excluído |
+| Ops (sprints, meetings) | `ops/` | ❌ excluído |
+| Inbox | `inbox/` | ❌ excluído |
+
+Qualquer arquivo com `confidential: true` no frontmatter é excluído automaticamente, independente da seleção.
+
+**Fluxo:**
 
 1. **Checklist de privacidade** — exibir o que será exposto e pedir confirmação:
    ```
@@ -249,7 +317,8 @@ Gera `_public/index.html` — uma página estática, auto-contida, deployável n
    - Hipóteses abertas: lista de `library/05`
 
 3. **Gerar `_public/index.html`** — preencher o template com o conteúdo coletado.  
-   O template está em `_public/template.html`. Copiar o template para `_public/index.html` e substituir cada `{{PLACEHOLDER}}` pelo conteúdo correspondente. O HTML deve ser auto-contido (sem dependências externas).
+   O template está em `_public/template.html`. Copiar o template para `_public/index.html` e substituir cada `{{PLACEHOLDER}}` pelo conteúdo correspondente. O HTML deve ser auto-contido (sem dependências externas).  
+   ⚠️ **Escaping obrigatório:** ao injetar conteúdo do vault no HTML, sempre escapar `<` → `&lt;`, `>` → `&gt;`, `&` → `&amp;`. Nunca inserir conteúdo bruto em atributos ou elementos HTML.
 
 4. **Commit:**
    ```
@@ -259,11 +328,31 @@ Gera `_public/index.html` — uma página estática, auto-contida, deployável n
 5. **Reportar ao PM:**
    ```
    ✅ Portfólio gerado em _public/index.html
+
    Para publicar no GitHub Pages:
-   git push origin main
-   → Ativar GitHub Pages em Settings > Pages > Branch: main, Folder: /_public
-   → Acesso em: https://[user].github.io/[repo]
+   1. git push origin main
+   2. Settings → Pages → Source: Deploy from a branch
+      Branch: main · Folder: /_public → Save
+   3. Acesso em: https://[user].github.io/[repo]
+
+   A partir daí, qualquer push com mudanças em _public/ atualiza o portfólio.
    ```
+
+**Personalizar o visual:** o template está em `_public/template.html`. Edite antes de rodar `/publish`. As variáveis CSS ficam no início do arquivo:
+```css
+:root {
+  --accent: #7c6fff;
+  --bg:     #0d0d0d;
+  --text:   #e8e8e8;
+}
+```
+
+**Limitações:**
+- Vaults grandes podem estourar contexto — rodar `/publish` por partes se necessário
+- Imagens não são incluídas por padrão — adicionar manualmente ao `template.html`
+- Template padrão em português — para inglês, editar textos estáticos do `template.html`
+
+**Cadência sugerida:** ao final de cada quarter, junto com a retrospectiva de sprint.
 
 ---
 

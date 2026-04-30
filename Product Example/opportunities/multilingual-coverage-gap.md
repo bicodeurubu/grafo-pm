@@ -3,7 +3,10 @@ type: opportunity
 status: active
 confidence: medium
 explored: false
+quarter: Q2-2026
 tldr: 15% of escalations come from LATAM customers writing in Portuguese or Spanish — the chatbot has near-zero resolution rate for these conversations
+created: 2026-04-01
+updated: 2026-04-14
 ---
 
 # Opportunity: Multilingual Coverage Gap

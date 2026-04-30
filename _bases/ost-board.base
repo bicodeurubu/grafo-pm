@@ -1,0 +1,15 @@
+{
+  "filters": [
+    {
+      "field": "type",
+      "operator": "is_in",
+      "value": ["outcome", "opportunity", "solution", "experiment"]
+    }
+  ],
+  "groupBy": "type",
+  "sort": [
+    { "field": "status", "direction": "asc" },
+    { "field": "updated", "direction": "desc" }
+  ],
+  "columns": ["type", "status", "confidence", "explored", "quarter", "tldr", "updated"]
+}

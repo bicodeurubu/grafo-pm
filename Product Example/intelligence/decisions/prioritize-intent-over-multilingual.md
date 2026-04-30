@@ -1,7 +1,10 @@
 ---
 type: decision
 status: approved
+confidence: high
 tldr: Bet Q2 on intent classification fix before multilingual expansion — intent affects 78% of users, multilingual affects 22%, and the ROI gap is clear
+created: 2026-04-07
+updated: 2026-04-07
 ---
 
 # Decision: Prioritize Intent Classification over Multilingual in Q2

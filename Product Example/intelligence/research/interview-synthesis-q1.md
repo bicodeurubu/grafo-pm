@@ -1,7 +1,11 @@
 ---
 type: research
 status: active
+confidence: high
+bias_checked: true
 tldr: 7 customers interviewed about chatbot failures — 6/7 describe intent misclassification as primary frustration; 3 LATAM users report chatbot as completely unusable
+created: 2026-04-01
+updated: 2026-04-01
 ---
 
 # Interview Synthesis: Chatbot Resolution Failures — Q1 2026

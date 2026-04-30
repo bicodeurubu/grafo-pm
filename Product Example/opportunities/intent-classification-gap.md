@@ -3,7 +3,10 @@ type: opportunity
 status: active
 confidence: medium
 explored: false
+quarter: Q2-2026
 tldr: The chatbot misclassifies user intent in 38% of conversations, causing unnecessary escalations — confirmed by data and 7 interviews
+created: 2026-04-01
+updated: 2026-04-14
 ---
 
 # Opportunity: Intent Classification Gap

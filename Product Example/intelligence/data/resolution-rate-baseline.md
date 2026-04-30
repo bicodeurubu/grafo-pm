@@ -1,7 +1,12 @@
 ---
 type: data
 status: active
+confidence: high
+bias_checked: true
+freshness_days: 7
 tldr: Autonomous resolution rate metric definition and Q1 2026 baseline — 41%, measured weekly, target 60% by end of Q2
+created: 2026-04-01
+updated: 2026-04-01
 ---
 
 # Metric: Autonomous Resolution Rate — Baseline

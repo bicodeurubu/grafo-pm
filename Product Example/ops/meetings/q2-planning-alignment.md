@@ -2,6 +2,8 @@
 type: meeting
 status: archived
 tldr: Q2 planning alignment — team agreed to bet Q2 on intent classification fix; multilingual moves to Q3; experiment to start week 3 of April
+created: 2026-04-07
+updated: 2026-04-07
 ---
 
 # Meeting: Q2 Planning Alignment

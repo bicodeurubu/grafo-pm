@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grafo PM — Como funciona</title>
+<title>Grafo PM — How it works</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
@@ -103,7 +103,7 @@ html, body {
 }
 .scene.active .l { animation: lineIn .55s ease forwards; }
 
-/* ── Chips (scattered knowledge items) ── */
+/* ── Chips ── */
 .chips {
   display: flex;
   flex-wrap: wrap;
@@ -121,25 +121,21 @@ html, body {
   background: rgba(0,0,0,.05);
   opacity: 0;
 }
-/* Amber chip — entrevistas, decisões */
 .chip.ca {
   border-color: rgba(184,114,10,.35);
   color: var(--accent);
   background: rgba(184,114,10,.07);
 }
-/* Teal chip — dados, métricas */
 .chip.ct {
   border-color: rgba(23,122,116,.3);
   color: var(--teal);
   background: rgba(23,122,116,.06);
 }
-/* Red-muted chip — urgências, ruído */
 .chip.cr {
   border-color: rgba(160,40,30,.25);
   color: rgba(160,40,30,.8);
   background: rgba(160,40,30,.05);
 }
-
 .scene.active .chip { animation: lineIn .45s ease forwards; }
 
 /* ── Inbox box ── */
@@ -194,7 +190,7 @@ html, body {
 }
 .scene.active .inbox-tag { animation: lineIn .4s ease forwards; }
 
-/* ── Signal dot (pulsing) ── */
+/* ── Signal dot ── */
 .signal-wrap {
   margin: 40px 0 4px;
   display: flex;
@@ -233,7 +229,7 @@ html, body {
 }
 .scene.active .signal-dot { animation: lineIn .5s .2s ease forwards; }
 
-/* Sequential questions (scene signal) */
+/* Questions */
 .questions { margin-top: 32px; display: flex; flex-direction: column; gap: 18px; }
 .question {
   font-size: clamp(1.1rem, 2.2vw, 1.4rem);
@@ -276,7 +272,7 @@ html, body {
 .out-label.red  { color: var(--red); font-size: .92rem; }
 .scene.active .out-item { animation: lineIn .5s ease forwards; }
 
-/* ── File grid (Library) ── */
+/* ── File grid ── */
 .file-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -370,7 +366,7 @@ html, body {
 .agent-chip .ai { font-size: 17px; }
 .scene.active .agent-chip { animation: lineIn .45s ease forwards; }
 
-/* ── Final scene CTAs ── */
+/* ── Final CTAs ── */
 .final-ctas {
   display: flex;
   gap: 14px;
@@ -493,196 +489,196 @@ html, body {
 </head>
 <body>
 
-<a href="LANDING.html" id="back">← ver landing</a>
+<a href="LANDING.en.html" id="back">← back to landing</a>
 <div id="counter">01 / 08</div>
 
 <div id="stage">
 
-  <!-- ═══ S0: VISÃO GERAL (era slide 06) ═══ -->
+  <!-- ═══ S0: OVERVIEW ═══ -->
   <div class="scene active" data-dur="13000" data-n="01">
     <div class="scene-inner">
-      <span class="stag">// 01 — como funciona</span>
+      <span class="stag">// 01 — how it works</span>
       <h1 class="headline">
-        <span class="l" style="animation-delay:.2s">O fluxo completo.</span>
-        <span class="l col-muted" style="animation-delay:.6s">Em quatro passos.</span>
+        <span class="l" style="animation-delay:.2s">The full flow.</span>
+        <span class="l col-muted" style="animation-delay:.6s">In four steps.</span>
       </h1>
       <div class="flow">
         <div class="flow-step" style="animation-delay:1.4s">
           <span class="flow-num">01</span>
           <div>
-            <div class="flow-text">PM insere conhecimento bruto</div>
-            <div class="flow-sub">entrevistas · dados · decisões · qualquer coisa que importa</div>
+            <div class="flow-text">PM feeds raw knowledge</div>
+            <div class="flow-sub">interviews · data · decisions · anything that matters</div>
           </div>
         </div>
         <div class="flow-step" style="animation-delay:3.2s">
           <span class="flow-num">02</span>
           <div>
-            <div class="flow-text">Signal processa e conecta</div>
-            <div class="flow-sub">separa sinal de ruído · cria estrutura · documenta o que foi descartado</div>
+            <div class="flow-text">Signal processes and connects</div>
+            <div class="flow-sub">separates signal from noise · creates structure · documents what was discarded</div>
           </div>
         </div>
         <div class="flow-step" style="animation-delay:5.2s">
           <span class="flow-num teal">03</span>
           <div>
-            <div class="flow-text" style="color:var(--teal)">Biblioteca se forma e se atualiza</div>
-            <div class="flow-sub">oito arquivos vivos · contexto real do produto</div>
+            <div class="flow-text" style="color:var(--teal)">Library forms and updates</div>
+            <div class="flow-sub">eight living files · real product context</div>
           </div>
         </div>
         <div class="flow-step" style="animation-delay:7.2s">
           <span class="flow-num teal">04</span>
           <div>
-            <div class="flow-text" style="color:var(--teal)">Qualquer agente opera com esse contexto</div>
-            <div class="flow-sub">a próxima sessão não começa do zero</div>
+            <div class="flow-text" style="color:var(--teal)">Any agent operates with that context</div>
+            <div class="flow-sub">the next session doesn't start from zero</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ═══ S1: O PROBLEMA ═══ -->
+  <!-- ═══ S1: THE PROBLEM ═══ -->
   <div class="scene" data-dur="10000" data-n="02">
     <div class="scene-inner">
-      <span class="stag">// 02 — o problema</span>
+      <span class="stag">// 02 — the problem</span>
       <h1 class="headline">
-        <span class="l col-muted" style="animation-delay:.2s">Você sabe o que</span>
-        <span class="l" style="animation-delay:.6s">aconteceu no produto.</span>
+        <span class="l col-muted" style="animation-delay:.2s">You know what</span>
+        <span class="l" style="animation-delay:.6s">happened in the product.</span>
       </h1>
       <div class="body">
-        <span class="l" style="animation-delay:1.3s">Mas esse conhecimento está espalhado em todo lugar.</span>
-        <span class="l" style="animation-delay:1.9s">E nenhuma ferramenta conecta os pontos por você.</span>
+        <span class="l" style="animation-delay:1.3s">But that knowledge is scattered everywhere.</span>
+        <span class="l" style="animation-delay:1.9s">And no tool connects the dots for you.</span>
       </div>
       <div class="chips">
-        <span class="chip ca" style="animation-delay:2.8s">entrevista_v3.docx</span>
-        <span class="chip cr" style="animation-delay:3.0s">slack: urgente @pm</span>
-        <span class="chip ct" style="animation-delay:3.2s">dados Q1 churn</span>
-        <span class="chip ca" style="animation-delay:3.4s">decisão: priorizar X</span>
-        <span class="chip"   style="animation-delay:3.6s">nota reunião</span>
+        <span class="chip ca" style="animation-delay:2.8s">interview_v3.docx</span>
+        <span class="chip cr" style="animation-delay:3.0s">slack: urgent @pm</span>
+        <span class="chip ct" style="animation-delay:3.2s">Q1 churn data</span>
+        <span class="chip ca" style="animation-delay:3.4s">decision: prioritize X</span>
+        <span class="chip"   style="animation-delay:3.6s">meeting notes</span>
         <span class="chip cr" style="animation-delay:3.8s">call recording</span>
         <span class="chip"   style="animation-delay:4.0s">email feedback</span>
-        <span class="chip ct" style="animation-delay:4.2s">hipótese aberta</span>
+        <span class="chip ct" style="animation-delay:4.2s">open hypothesis</span>
       </div>
     </div>
   </div>
 
-  <!-- ═══ S2: A ENTRADA ═══ -->
+  <!-- ═══ S2: THE INBOX ═══ -->
   <div class="scene" data-dur="10000" data-n="03">
     <div class="scene-inner">
-      <span class="stag">// 03 — a caixa de entrada</span>
+      <span class="stag">// 03 — the inbox</span>
       <h1 class="headline">
-        <span class="l" style="animation-delay:.2s">Joga tudo dentro.</span>
+        <span class="l" style="animation-delay:.2s">Drop everything in.</span>
       </h1>
       <div class="body">
-        <span class="l" style="animation-delay:.9s">Entrevistas. Dados de produto. Decisões de Slack.</span>
-        <span class="l" style="animation-delay:1.5s; color:var(--text); font-weight:500">Sem organizar. Sem formatar. Só capturar.</span>
+        <span class="l" style="animation-delay:.9s">Interviews. Product data. Slack decisions.</span>
+        <span class="l" style="animation-delay:1.5s; color:var(--text); font-weight:500">No organizing. No formatting. Just capture.</span>
       </div>
       <div class="inbox-box" style="animation-delay:.5s">
-        <div class="inbox-label">📥 caixa de entrada</div>
+        <div class="inbox-label">📥 inbox</div>
         <div class="inbox-items">
-          <span class="inbox-item" style="animation-delay:2.2s">entrevista_usuario.md</span>
-          <span class="inbox-item" style="animation-delay:2.5s">dado de churn Q2</span>
-          <span class="inbox-item" style="animation-delay:2.8s">decisão sobre prioridade</span>
-          <span class="inbox-item" style="animation-delay:3.1s">nota de reunião</span>
-          <span class="inbox-item" style="animation-delay:3.4s">hipótese não validada</span>
+          <span class="inbox-item" style="animation-delay:2.2s">user_interview.md</span>
+          <span class="inbox-item" style="animation-delay:2.5s">Q2 churn data</span>
+          <span class="inbox-item" style="animation-delay:2.8s">priority decision</span>
+          <span class="inbox-item" style="animation-delay:3.1s">meeting notes</span>
+          <span class="inbox-item" style="animation-delay:3.4s">unvalidated hypothesis</span>
         </div>
-        <span class="inbox-tag" style="animation-delay:4.2s">custo de entrada: zero &nbsp;·&nbsp; sem formato exigido</span>
+        <span class="inbox-tag" style="animation-delay:4.2s">entry cost: zero &nbsp;·&nbsp; no format required</span>
       </div>
     </div>
   </div>
 
-  <!-- ═══ S3: SIGNAL PROCESSA ═══ -->
+  <!-- ═══ S3: SIGNAL PROCESSES ═══ -->
   <div class="scene" data-dur="14000" data-n="04">
     <div class="scene-inner">
-      <span class="stag">// 04 — Signal processa</span>
+      <span class="stag">// 04 — Signal processes</span>
       <h1 class="headline">
-        <span class="l" style="animation-delay:.2s">Signal investiga.</span>
+        <span class="l" style="animation-delay:.2s">Signal investigates.</span>
       </h1>
       <div class="signal-wrap">
         <div class="signal-dot">
           <span class="signal-dot-label">⬡</span>
         </div>
-        <span class="l col-accent" style="animation-delay:.8s; font-family:var(--mono); font-size:12px; letter-spacing:.06em">processando contexto...</span>
+        <span class="l col-accent" style="animation-delay:.8s; font-family:var(--mono); font-size:12px; letter-spacing:.06em">processing context...</span>
       </div>
       <div class="questions">
-        <span class="question" style="animation-delay:2.5s">→ Quais são as evidências?</span>
-        <span class="question" style="animation-delay:5s">→ O que conecta com o quê?</span>
-        <span class="question" style="animation-delay:7.5s">→ O que é sinal? O que é ruído?</span>
-        <span class="question" style="animation-delay:10s; color:var(--text); font-weight:500">→ O que foi descartado — e por quê?</span>
+        <span class="question" style="animation-delay:2.5s">→ What are the evidence?</span>
+        <span class="question" style="animation-delay:5s">→ What connects to what?</span>
+        <span class="question" style="animation-delay:7.5s">→ What's signal? What's noise?</span>
+        <span class="question" style="animation-delay:10s; color:var(--text); font-weight:500">→ What was discarded — and why?</span>
       </div>
     </div>
   </div>
 
-  <!-- ═══ S4: OUTPUTS EMERGEM ═══ -->
+  <!-- ═══ S4: OUTPUTS EMERGE ═══ -->
   <div class="scene" data-dur="11000" data-n="05">
     <div class="scene-inner">
-      <span class="stag">// 05 — outputs estruturados</span>
+      <span class="stag">// 05 — structured outputs</span>
       <h1 class="headline">
-        <span class="l" style="animation-delay:.2s">Estrutura que antes</span>
-        <span class="l" style="animation-delay:.6s">não existia.</span>
+        <span class="l" style="animation-delay:.2s">Structure that</span>
+        <span class="l" style="animation-delay:.6s">didn't exist before.</span>
       </h1>
       <div class="body">
-        <span class="l" style="animation-delay:1.2s">Sem você ter que criá-la manualmente.</span>
+        <span class="l" style="animation-delay:1.2s">Without you having to create it manually.</span>
       </div>
       <div class="out-list">
         <div class="out-item oi-teal" style="animation-delay:2s">
           <span class="out-icon">🌿</span>
-          <span class="out-label teal">oportunidade detectada</span>
+          <span class="out-label teal">opportunity detected</span>
         </div>
         <div class="out-item oi-teal" style="animation-delay:2.6s">
           <span class="out-icon">📌</span>
-          <span class="out-label teal">hipótese registrada</span>
+          <span class="out-label teal">hypothesis logged</span>
         </div>
         <div class="out-item oi-def" style="animation-delay:3.2s">
           <span class="out-icon">⚖️</span>
-          <span class="out-label">decisão com rastro completo</span>
+          <span class="out-label">decision with full trail</span>
         </div>
         <div class="out-item oi-def" style="animation-delay:3.8s">
           <span class="out-icon">🔬</span>
-          <span class="out-label">evidência classificada</span>
+          <span class="out-label">classified evidence</span>
         </div>
         <div class="out-item oi-red" style="animation-delay:4.4s">
           <span class="out-icon">✗</span>
-          <span class="out-label red">descartado — com motivo documentado</span>
+          <span class="out-label red">discarded — reason documented</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ═══ S5: A BIBLIOTECA ═══ -->
+  <!-- ═══ S5: THE LIBRARY ═══ -->
   <div class="scene" data-dur="12000" data-n="06">
     <div class="scene-inner">
-      <span class="stag">// 06 — a Biblioteca</span>
+      <span class="stag">// 06 — the Library</span>
       <h1 class="headline">
-        <span class="l col-teal" style="animation-delay:.2s">Oito arquivos.</span>
-        <span class="l" style="animation-delay:.6s">Uma rede viva.</span>
+        <span class="l col-teal" style="animation-delay:.2s">Eight files.</span>
+        <span class="l" style="animation-delay:.6s">A living network.</span>
       </h1>
       <div class="body">
-        <span class="l" style="animation-delay:1.2s">A verdade contextual do seu produto.</span>
-        <span class="l" style="animation-delay:1.8s">Conectada. Acionável. Sempre atualizada.</span>
+        <span class="l" style="animation-delay:1.2s">The contextual truth of your product.</span>
+        <span class="l" style="animation-delay:1.8s">Connected. Actionable. Always updated.</span>
       </div>
       <div class="file-grid">
-        <span class="file" style="animation-delay:2.6s">contexto_produto.md</span>
-        <span class="file" style="animation-delay:2.9s">decisoes.md</span>
-        <span class="file" style="animation-delay:3.2s">hipoteses.md</span>
-        <span class="file" style="animation-delay:3.5s">evidencias.md</span>
-        <span class="file" style="animation-delay:3.8s">experimentos.md</span>
-        <span class="file" style="animation-delay:4.1s">glossario.md</span>
-        <span class="file" style="animation-delay:4.4s">metricas.md</span>
-        <span class="file" style="animation-delay:4.7s">instrucoes_llm.md</span>
+        <span class="file" style="animation-delay:2.6s">product_context.md</span>
+        <span class="file" style="animation-delay:2.9s">decisions.md</span>
+        <span class="file" style="animation-delay:3.2s">hypotheses.md</span>
+        <span class="file" style="animation-delay:3.5s">evidence.md</span>
+        <span class="file" style="animation-delay:3.8s">experiments.md</span>
+        <span class="file" style="animation-delay:4.1s">glossary.md</span>
+        <span class="file" style="animation-delay:4.4s">metrics.md</span>
+        <span class="file" style="animation-delay:4.7s">llm_instructions.md</span>
       </div>
     </div>
   </div>
 
-  <!-- ═══ S6: QUALQUER AGENTE ═══ -->
+  <!-- ═══ S6: ANY AGENT ═══ -->
   <div class="scene" data-dur="10000" data-n="07">
     <div class="scene-inner">
-      <span class="stag">// 07 — qualquer agente</span>
+      <span class="stag">// 07 — any agent</span>
       <h1 class="headline">
-        <span class="l" style="animation-delay:.2s">Qualquer agente.</span>
-        <span class="l" style="animation-delay:.7s">Qualquer ferramenta.</span>
+        <span class="l" style="animation-delay:.2s">Any agent.</span>
+        <span class="l" style="animation-delay:.7s">Any tool.</span>
       </h1>
       <div class="body">
-        <span class="l" style="animation-delay:1.4s">Com contexto real do seu produto.</span>
-        <span class="l" style="animation-delay:2s">Não um prompt genérico. O seu produto.</span>
+        <span class="l" style="animation-delay:1.4s">With real context about your product.</span>
+        <span class="l" style="animation-delay:2s">Not a generic prompt. Your product.</span>
       </div>
       <div class="agent-row">
         <div class="agent-chip ac-a" style="animation-delay:3s">
@@ -692,11 +688,11 @@ html, body {
           <span class="ai">💬</span> claude
         </div>
         <div class="agent-chip ac-d" style="animation-delay:3.8s">
-          <span class="ai">🤖</span> qualquer LLM
+          <span class="ai">🤖</span> any LLM
         </div>
       </div>
       <div class="body" style="margin-top:28px">
-        <span class="l col-accent" style="animation-delay:4.8s; font-size:1rem; font-weight:600">Seus agentes são tão bons quanto o contexto que os alimenta.</span>
+        <span class="l col-accent" style="animation-delay:4.8s; font-size:1rem; font-weight:600">Your agents are only as good as the context that feeds them.</span>
       </div>
     </div>
   </div>
@@ -704,23 +700,23 @@ html, body {
   <!-- ═══ S7: FINAL ═══ -->
   <div class="scene" data-dur="99999" data-n="08">
     <div class="scene-inner">
-      <span class="stag">// 08 — em essência</span>
+      <span class="stag">// 08 — in essence</span>
       <h1 class="headline">
         <span class="l col-accent" style="animation-delay:.3s">Grafo PM.</span>
-        <span class="l" style="animation-delay:.9s">Velocidade com direção.</span>
+        <span class="l" style="animation-delay:.9s">Speed with direction.</span>
       </h1>
       <div class="body">
-        <span class="l" style="animation-delay:1.8s">Conhecimento disperso transformado em contexto acionável.</span>
-        <span class="l col-muted" style="animation-delay:2.4s; font-size:.9rem; margin-top:6px">Para Product Managers que constroem com IA — não apenas perto dela.</span>
+        <span class="l" style="animation-delay:1.8s">Scattered knowledge transformed into actionable context.</span>
+        <span class="l col-muted" style="animation-delay:2.4s; font-size:.9rem; margin-top:6px">For Product Managers who build with AI — not just near it.</span>
       </div>
       <div class="final-ctas">
         <a href="https://github.com/bicodeurubu/grafo-pm" target="_blank" rel="noopener" class="fcta fcta-github" style="animation-delay:3.5s">
           <svg height="15" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
             <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
           </svg>
-          Baixe Gratuitamente
+          Download Free
         </a>
-        <a href="LANDING.html" class="fcta fcta-ghost" style="animation-delay:4s">← ver landing</a>
+        <a href="LANDING.en.html" class="fcta fcta-ghost" style="animation-delay:4s">← back to landing</a>
       </div>
     </div>
   </div>
@@ -732,12 +728,12 @@ html, body {
 
 <!-- Controls -->
 <div id="controls">
-  <button class="ctrl-btn" id="prev" title="Anterior (←)">←</button>
+  <button class="ctrl-btn" id="prev" title="Previous (←)">←</button>
   <div class="dots" id="dots"></div>
-  <button class="ctrl-btn" id="next" title="Próximo (→)">→</button>
+  <button class="ctrl-btn" id="next" title="Next (→)">→</button>
 </div>
 
-<div id="keyhint">← → espaço</div>
+<div id="keyhint">← → space</div>
 
 <script>
 const scenes = Array.from(document.querySelectorAll('.scene'));

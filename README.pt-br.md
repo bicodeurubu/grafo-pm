@@ -12,40 +12,31 @@ Grafo PM é uma convenção: uma estrutura conceitual + um arquivo de instruçã
 
 ---
 
-## É / Não é
+## O que o Grafo PM faz
 
-| É | Não é |
-|---|---|
-| 1 PM / 1 produto | Multi-PM ou multi-produto |
-| Local — arquivos no seu computador | Banco de dados |
-| Markdown puro | App ou plugin do Obsidian |
-| Framework OST (Outcome → Opportunity → Solution → Experiment) | Garantia determinística |
-| Contexto injetável em qualquer LLM | SaaS ou serviço hospedado |
+### 🧠 Gestão de conhecimento
+Captura e estrutura conhecimento bruto de produto — entrevistas, dados, clippings, decisões de Slack, notas de reunião. Conecta tudo em grafo vivo via wikilinks: não é uma pasta de arquivos, é uma rede de evidências. Mantém o conhecimento ativo: detecta o que ficou stale, o que tem baixa confiança, o que nunca foi revisado pelo PM.
 
----
+### 🌳 Framework de raciocínio OST
+Organiza o pensamento de produto em Outcome → Opportunity → Solution → Experiment. Detecta gaps estruturais automaticamente ("essa solução não tem experimento", "essa oportunidade não tem solução"). Detecta contradições entre evidências e as preserva visivelmente — nunca resolve silenciosamente.
 
-## Como funciona
+### 📋 Registro e auditoria
+Decisões são imutáveis quando aprovadas, com trilha completa: contexto, opções descartadas, evidências que informaram. Para mudar uma decisão, cria-se uma nova que supersede. Rastreabilidade total: qualquer claim conecta a uma fonte específica.
 
-O PM joga material bruto no `inbox/` e fala com o LLM. O LLM classifica, cria páginas wiki, conecta via wikilinks, e monta o Opportunity Solution Tree automaticamente. A `library/` é a camada de síntese viva do vault — seus 8 arquivos são páginas wiki de primeira classe, visíveis no graph view do Obsidian e referenciáveis por qualquer página.
+### 📚 Library — wiki de primeira classe e contexto injetável
+8 arquivos que são simultaneamente páginas wiki do vault (visíveis no graph view, referenciáveis via wikilinks por qualquer página OST) e contexto injetável em prompts externos. O LLM faz um library check a cada interação — propõe atualizações com base no novo conteúdo, nunca edita automaticamente. Injeção seletiva por tarefa: escrever spec usa `01 + 02 + 04`, planejar sprint usa `03 + 05 + 06`, contexto completo usa `07`. Funciona em qualquer ferramenta — Cursor, GPT, Claude, Gemini, Cowork. É a memória de produto portátil, não presa a uma ferramenta.
 
-```
-inbox/          → drop zone: entrevistas, dados, clippings, ideias
-outcomes/       → OKRs e metas
-opportunities/  → necessidades confirmadas de usuário
-solutions/      → PRDs e specs
-experiments/    → hipóteses e resultados
-intelligence/   → research, data, decisions
-ops/            → sprints e meetings
-library/        → síntese viva do vault — wiki de primeira classe + injetável em prompts
-  01-product-context        → o que o produto é, para quem, fora de escopo
-  02-user-truths            → comportamentos de usuário confirmados por evidência
-  03-strategic-bets         → apostas estratégicas e OKRs do quarter
-  04-decision-constraints   → decisões aprovadas que limitam o espaço de solução
-  05-open-hypotheses        → hipóteses e experimentos ativos
-  06-data-anchors           → métricas norte com valores atuais e baselines
-  07-agent-instructions     → síntese de 01–06 para agentes externos
-  08-ubiquitous-language    → glossário canônico de termos do vault e do produto
-```
+### 🔄 Continuidade de sessão
+Lê o histórico git ao iniciar cada sessão e informa o PM o que estava em andamento. Não recomeça do zero. Sem setup técnico, sem hooks — funciona no dia 1.
+
+### 🔤 Linguagem canônica
+Glossário de termos do vault e do produto vive em `library/08-ubiquitous-language.md`. O comando `/glossary` escaneia uma conversa ou arquivo de inbox, elege termos canônicos, bana aliases conflitantes e sinaliza ambiguidades. Enforçamento passivo: ao criar qualquer página, o LLM verifica e corrige vocabulário automaticamente, sem o PM precisar pedir.
+
+### ✅ Validação e saúde
+Health check após toda interação: gaps no OST, dados expirados, páginas sem revisão, baixa confiança. Bias check obrigatório em pesquisa: toda página de research precisa de "Counter-arguments" e "Data gaps" antes de ser considerada completa. Pesquisa automática (`/autoresearch`) que sintetiza fontes web em páginas conectadas ao vault.
+
+### 🌐 Portfólio público — `/publish`
+Exporta o vault como uma página estática auto-contida, deployável no GitHub Pages. Mostra o raciocínio de produto — OST, decisões com contexto completo, experimentos e hipóteses abertas — sem expor dados sensíveis. Uma janela para como o PM pensa, não só o que construiu. → [Ver documentação completa](PUBLISH.md)
 
 ---
 
@@ -143,6 +134,43 @@ Quando um novo termo de domínio surgir em entrevistas ou conversas, rode `/glos
 
 ---
 
+## Como funciona
+
+O PM joga material bruto no `inbox/` e fala com o LLM. O LLM classifica, cria páginas wiki, conecta via wikilinks, e monta o Opportunity Solution Tree automaticamente. A `library/` é a camada de síntese viva do vault — seus 8 arquivos são páginas wiki de primeira classe, visíveis no graph view do Obsidian e referenciáveis por qualquer página.
+
+```
+inbox/          → drop zone: entrevistas, dados, clippings, ideias
+outcomes/       → OKRs e metas
+opportunities/  → necessidades confirmadas de usuário
+solutions/      → PRDs e specs
+experiments/    → hipóteses e resultados
+intelligence/   → research, data, decisions
+ops/            → sprints e meetings
+library/        → síntese viva do vault — wiki de primeira classe + injetável em prompts
+  01-product-context        → o que o produto é, para quem, fora de escopo
+  02-user-truths            → comportamentos de usuário confirmados por evidência
+  03-strategic-bets         → apostas estratégicas e OKRs do quarter
+  04-decision-constraints   → decisões aprovadas que limitam o espaço de solução
+  05-open-hypotheses        → hipóteses e experimentos ativos
+  06-data-anchors           → métricas norte com valores atuais e baselines
+  07-agent-instructions     → síntese de 01–06 para agentes externos
+  08-ubiquitous-language    → glossário canônico de termos do vault e do produto
+```
+
+---
+
+## É / Não é
+
+| É | Não é |
+|---|---|
+| 1 PM / 1 produto | Multi-PM ou multi-produto |
+| Local — arquivos no seu computador | Banco de dados |
+| Markdown puro | App ou plugin do Obsidian |
+| Framework OST (Outcome → Opportunity → Solution → Experiment) | Garantia determinística |
+| Contexto injetável em qualquer LLM | SaaS ou serviço hospedado |
+
+---
+
 ## Pré-requisitos
 
 Você vai precisar de:
@@ -207,34 +235,6 @@ Escolha uma das opções:
 ```
 
 Quer ver um vault funcionando antes? Abra `Product Example/` — produto fictício de suporte com outcomes, oportunidades, PRDs e decisões conectados.
-
----
-
-## O que o Grafo PM faz
-
-### 🧠 Gestão de conhecimento
-Captura e estrutura conhecimento bruto de produto — entrevistas, dados, clippings, decisões de Slack, notas de reunião. Conecta tudo em grafo vivo via wikilinks: não é uma pasta de arquivos, é uma rede de evidências. Mantém o conhecimento ativo: detecta o que ficou stale, o que tem baixa confiança, o que nunca foi revisado pelo PM.
-
-### 🌳 Framework de raciocínio OST
-Organiza o pensamento de produto em Outcome → Opportunity → Solution → Experiment. Detecta gaps estruturais automaticamente ("essa solução não tem experimento", "essa oportunidade não tem solução"). Detecta contradições entre evidências e as preserva visivelmente — nunca resolve silenciosamente.
-
-### 📋 Registro e auditoria
-Decisões são imutáveis quando aprovadas, com trilha completa: contexto, opções descartadas, evidências que informaram. Para mudar uma decisão, cria-se uma nova que supersede. Rastreabilidade total: qualquer claim conecta a uma fonte específica.
-
-### 📚 Library — wiki de primeira classe e contexto injetável
-8 arquivos que são simultaneamente páginas wiki do vault (visíveis no graph view, referenciáveis via wikilinks por qualquer página OST) e contexto injetável em prompts externos. O LLM faz um library check a cada interação — propõe atualizações com base no novo conteúdo, nunca edita automaticamente. Injeção seletiva por tarefa: escrever spec usa `01 + 02 + 04`, planejar sprint usa `03 + 05 + 06`, contexto completo usa `07`. Funciona em qualquer ferramenta — Cursor, GPT, Claude, Gemini, Cowork. É a memória de produto portátil, não presa a uma ferramenta.
-
-### 🔄 Continuidade de sessão
-Lê o histórico git ao iniciar cada sessão e informa o PM o que estava em andamento. Não recomeça do zero. Sem setup técnico, sem hooks — funciona no dia 1.
-
-### 🔤 Linguagem canônica
-Glossário de termos do vault e do produto vive em `library/08-ubiquitous-language.md`. O comando `/glossary` escaneia uma conversa ou arquivo de inbox, elege termos canônicos, bana aliases conflitantes e sinaliza ambiguidades. Enforçamento passivo: ao criar qualquer página, o LLM verifica e corrige vocabulário automaticamente, sem o PM precisar pedir.
-
-### ✅ Validação e saúde
-Health check após toda interação: gaps no OST, dados expirados, páginas sem revisão, baixa confiança. Bias check obrigatório em pesquisa: toda página de research precisa de "Counter-arguments" e "Data gaps" antes de ser considerada completa. Pesquisa automática (`/autoresearch`) que sintetiza fontes web em páginas conectadas ao vault.
-
-### 🌐 Portfólio público — `/publish`
-Exporta o vault como uma página estática auto-contida, deployável no GitHub Pages. Mostra o raciocínio de produto — OST, decisões com contexto completo, experimentos e hipóteses abertas — sem expor dados sensíveis. Uma janela para como o PM pensa, não só o que construiu. → [Ver documentação completa](PUBLISH.md)
 
 ---
 

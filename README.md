@@ -12,40 +12,31 @@ Grafo PM is a convention: a conceptual structure + an instruction file (`SIGNAL.
 
 ---
 
-## What it is / What it isn't
+## What Grafo PM does
 
-| Is | Is not |
-|---|---|
-| 1 PM / 1 product | Multi-PM or multi-product |
-| Local — files on your computer | Database |
-| Pure Markdown | Obsidian app or plugin |
-| OST framework (Outcome → Opportunity → Solution → Experiment) | Deterministic guarantee |
-| Injectable context for any LLM | SaaS or hosted service |
+### 🧠 Knowledge management
+Captures and structures raw product knowledge — interviews, data, clippings, Slack decisions, meeting notes. Connects everything in a live graph via wikilinks: not a file folder, but an evidence network. Keeps knowledge active: detects what went stale, what has low confidence, what was never reviewed.
 
----
+### 🌳 OST reasoning framework
+Organizes product thinking in Outcome → Opportunity → Solution → Experiment. Detects structural gaps automatically ("this solution has no experiment", "this opportunity has no solution"). Detects contradictions between evidence and preserves them visibly — never resolves them silently.
 
-## How it works
+### 📋 Record-keeping and audit
+Decisions are immutable once approved, with a complete trail: context, discarded options, evidence that informed them. To change a decision, create a new one that supersedes it. Full traceability: any claim connects to a specific source.
 
-The PM drops raw material into `inbox/` and talks to the LLM. The LLM classifies it, creates wiki pages, connects them via wikilinks, and builds the Opportunity Solution Tree automatically. The `library/` is the vault's living synthesis layer — its 8 files are first-class wiki pages, visible in Obsidian's graph view and referenceable from any page.
+### 📚 Library — first-class wiki and injectable context
+8 files that are simultaneously vault wiki pages (visible in graph view, referenceable via wikilinks from any OST page) and injectable context for external prompts. The LLM runs a library check at every interaction — proposes updates based on new content, never edits automatically. Selective injection by task: writing a spec uses `01 + 02 + 04`, sprint planning uses `03 + 05 + 06`, full context uses `07`. Works in any tool — Cursor, GPT, Claude, Gemini, Cowork. It's the portable product memory, not locked to any tool.
 
-```
-inbox/          → drop zone: interviews, data, clippings, ideas
-outcomes/       → OKRs and goals
-opportunities/  → confirmed user needs
-solutions/      → PRDs and specs
-experiments/    → hypotheses and results
-intelligence/   → research, data, decisions
-ops/            → sprints and meetings
-library/        → living vault synthesis — first-class wiki + injectable into prompts
-  01-product-context        → what the product is, who it's for, out-of-scope
-  02-user-truths            → evidence-confirmed user behaviors
-  03-strategic-bets         → strategic bets and quarter OKRs
-  04-decision-constraints   → approved decisions that constrain the solution space
-  05-open-hypotheses        → active hypotheses and experiments
-  06-data-anchors           → north-star metrics with current values and baselines
-  07-agent-instructions     → synthesis of 01–06 for external agents
-  08-ubiquitous-language    → canonical glossary of vault and product terms
-```
+### 🔄 Session continuity
+Reads the git history at the start of each session and tells the PM what was in progress. Doesn't start from scratch. No technical setup, no hooks — works on day 1.
+
+### 🔤 Canonical language
+The glossary of vault and product terms lives in `library/08-ubiquitous-language.md`. The `/glossary` command scans a conversation or inbox file, elects canonical terms, bans conflicting aliases, and flags ambiguities. Passive enforcement: when creating any page, the LLM checks and corrects vocabulary automatically, without the PM needing to ask.
+
+### ✅ Validation and health
+Health check after every interaction: OST gaps, expired data, unreviewed pages, low confidence. Mandatory bias check on research: every research page needs "Counter-arguments" and "Data gaps" before it's considered complete. Automatic research (`/autoresearch`) that synthesizes web sources into pages connected to the vault.
+
+### 🌐 Public portfolio — `/publish`
+Exports the vault as a self-contained static page, deployable to GitHub Pages. Shows product reasoning — OST, decisions with full context, experiments and open hypotheses — without exposing sensitive data. A window into how the PM thinks, not just what they built. → [See full documentation](PUBLISH.md)
 
 ---
 
@@ -143,6 +134,43 @@ When a new domain term surfaces in interviews or conversations, run `/glossary`.
 
 ---
 
+## How it works
+
+The PM drops raw material into `inbox/` and talks to the LLM. The LLM classifies it, creates wiki pages, connects them via wikilinks, and builds the Opportunity Solution Tree automatically. The `library/` is the vault's living synthesis layer — its 8 files are first-class wiki pages, visible in Obsidian's graph view and referenceable from any page.
+
+```
+inbox/          → drop zone: interviews, data, clippings, ideas
+outcomes/       → OKRs and goals
+opportunities/  → confirmed user needs
+solutions/      → PRDs and specs
+experiments/    → hypotheses and results
+intelligence/   → research, data, decisions
+ops/            → sprints and meetings
+library/        → living vault synthesis — first-class wiki + injectable into prompts
+  01-product-context        → what the product is, who it's for, out-of-scope
+  02-user-truths            → evidence-confirmed user behaviors
+  03-strategic-bets         → strategic bets and quarter OKRs
+  04-decision-constraints   → approved decisions that constrain the solution space
+  05-open-hypotheses        → active hypotheses and experiments
+  06-data-anchors           → north-star metrics with current values and baselines
+  07-agent-instructions     → synthesis of 01–06 for external agents
+  08-ubiquitous-language    → canonical glossary of vault and product terms
+```
+
+---
+
+## What it is / What it isn't
+
+| Is | Is not |
+|---|---|
+| 1 PM / 1 product | Multi-PM or multi-product |
+| Local — files on your computer | Database |
+| Pure Markdown | Obsidian app or plugin |
+| OST framework (Outcome → Opportunity → Solution → Experiment) | Deterministic guarantee |
+| Injectable context for any LLM | SaaS or hosted service |
+
+---
+
 ## Prerequisites
 
 You'll need:
@@ -207,34 +235,6 @@ Choose one of the options:
 ```
 
 Want to see a working vault first? Open `Product Example/` — a fictional support product with connected outcomes, opportunities, PRDs, and decisions.
-
----
-
-## What Grafo PM does
-
-### 🧠 Knowledge management
-Captures and structures raw product knowledge — interviews, data, clippings, Slack decisions, meeting notes. Connects everything in a live graph via wikilinks: not a file folder, but an evidence network. Keeps knowledge active: detects what went stale, what has low confidence, what was never reviewed.
-
-### 🌳 OST reasoning framework
-Organizes product thinking in Outcome → Opportunity → Solution → Experiment. Detects structural gaps automatically ("this solution has no experiment", "this opportunity has no solution"). Detects contradictions between evidence and preserves them visibly — never resolves them silently.
-
-### 📋 Record-keeping and audit
-Decisions are immutable once approved, with a complete trail: context, discarded options, evidence that informed them. To change a decision, create a new one that supersedes it. Full traceability: any claim connects to a specific source.
-
-### 📚 Library — first-class wiki and injectable context
-8 files that are simultaneously vault wiki pages (visible in graph view, referenceable via wikilinks from any OST page) and injectable context for external prompts. The LLM runs a library check at every interaction — proposes updates based on new content, never edits automatically. Selective injection by task: writing a spec uses `01 + 02 + 04`, sprint planning uses `03 + 05 + 06`, full context uses `07`. Works in any tool — Cursor, GPT, Claude, Gemini, Cowork. It's the portable product memory, not locked to any tool.
-
-### 🔄 Session continuity
-Reads the git history at the start of each session and tells the PM what was in progress. Doesn't start from scratch. No technical setup, no hooks — works on day 1.
-
-### 🔤 Canonical language
-The glossary of vault and product terms lives in `library/08-ubiquitous-language.md`. The `/glossary` command scans a conversation or inbox file, elects canonical terms, bans conflicting aliases, and flags ambiguities. Passive enforcement: when creating any page, the LLM checks and corrects vocabulary automatically, without the PM needing to ask.
-
-### ✅ Validation and health
-Health check after every interaction: OST gaps, expired data, unreviewed pages, low confidence. Mandatory bias check on research: every research page needs "Counter-arguments" and "Data gaps" before it's considered complete. Automatic research (`/autoresearch`) that synthesizes web sources into pages connected to the vault.
-
-### 🌐 Public portfolio — `/publish`
-Exports the vault as a self-contained static page, deployable to GitHub Pages. Shows product reasoning — OST, decisions with full context, experiments and open hypotheses — without exposing sensitive data. A window into how the PM thinks, not just what they built. → [See full documentation](PUBLISH.md)
 
 ---
 

@@ -8,7 +8,7 @@ How the engineering skills should consume this repo's domain documentation when 
 - **`CONTEXT-MAP.md`** at the repo root if it exists — it points at one `CONTEXT.md` per context. Read each one relevant to the topic.
 - **`docs/adr/`** — read ADRs that touch the area you're about to work in.
 
-Neither `CONTEXT.md` nor `docs/adr/` exist yet in this repo. Proceed silently — `/domain-modeling` (reached via `/grill-with-docs` and `/improve-codebase-architecture`) creates them lazily when terms or decisions actually get resolved.
+`CONTEXT.md` and `docs/adr/` exist as of 2026-06-30. `/domain-modeling` (reached via `/grill-with-docs` and `/improve-codebase-architecture`) keeps creating/updating entries lazily when terms or decisions actually get resolved.
 
 This repo already ships `library/08-ubiquitous-language.md` — the canonical glossary for vault/product terminology (separate concern from engineering domain modeling, but check it first for any vault-related term before assuming it's undefined).
 

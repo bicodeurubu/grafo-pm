@@ -1,0 +1,3 @@
+# Markdown puro + Git + Obsidian, sem app/servidor/banco próprio
+
+O Grafo PM poderia ter sido construído como um SaaS ou app dedicado — daria mais controle sobre UX e onboarding. Decidimos contra: o objetivo é eliminar fricção de adoção e lock-in de vendor. Vault roda inteiramente em Markdown puro, versionado por Git (que também serve como trilha de auditoria), e visualizado no Obsidian apenas como camada de leitura/grafo — nenhuma dessas peças é obrigatória para o sistema funcionar, e nenhuma trava o PM a uma ferramenta proprietária. Custo aceito: sem onboarding guiado de produto, sem UI dedicada, sem validação de schema em tempo real — tudo isso fica a cargo de convenção (frontmatter, `_bases/`) e do LLM que opera o vault via `SIGNAL.md`.

@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Guardrail: este repo é o template público do Grafo PM (promovido a PMs).
+# Bloqueia push se dado real vazou pro scaffolding da raiz (SIGNAL.md, library/).
+# Trabalho real deve ficar em local-vault/ (gitignored, repo próprio sem remote público).
+# Product Example/ é demo intencional e fica fora desta checagem.
+
+set -e
+
+fail=0
+
+if [ -f SIGNAL.md ]; then
+  if ! grep -q "Produto:  \[nome\]" SIGNAL.md; then
+    echo "❌ SIGNAL.md (raiz) foi preenchido com dado real — não pode ir pro template público."
+    fail=1
+  fi
+fi
+
+for f in library/0[1-7]-*.md; do
+  [ -f "$f" ] || continue
+  if ! grep -q "^status: draft" "$f"; then
+    echo "❌ $f saiu de 'status: draft' — parece ter dado real, não pode ir pro template público."
+    fail=1
+  fi
+done
+
+if [ "$fail" -eq 1 ]; then
+  echo ""
+  echo "Trabalho real vai em local-vault/ (gitignored, repo git próprio, sem remote público)."
+  echo "Reverta as mudanças na raiz antes de dar push, ou mova o conteúdo real pra lá."
+  exit 1
+fi
+
+exit 0

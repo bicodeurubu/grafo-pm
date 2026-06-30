@@ -49,3 +49,7 @@ inbox/assets/
 LANDING.md
 LANDING.pt-br.md
 VIDEO_SCRIPT.pt-br.md
+
+# Vault real (trabalho de produto, dado proprietário) — repo git próprio,
+# nunca deve ser versionado neste template público.
+local-vault/
